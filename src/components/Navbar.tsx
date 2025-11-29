@@ -1,25 +1,23 @@
 "use client";
 import { useState } from "react";
+import { motion } from "motion/react";
 import { mainLinks } from "@/data/MainLinks";
 import Link from "next/link";
-import GlassSurface from "./ui/GlassSurface";
 import { Button } from "./ui/button";
 import { HeartHandshake } from "lucide-react";
-import ThemeButton from "./ui/ThemeButton";
+import { ThemeButton } from "./ui/ThemeButton";
+import { AnimatePresence } from "motion/react";
+import { fadeDown, transition } from "@/Animation";
 
 const Navbar = () => {
   const [menu, setMenu] = useState<Boolean>(false);
   return (
     <>
-      <GlassSurface
-        displace={15}
-        distortionScale={-150}
-        redOffset={5}
-        greenOffset={15}
-        blueOffset={25}
-        brightness={60}
-        opacity={0.8}
-        className="fixed top-3 left-2/4 -translate-x-2/4 w-full! max-w-[90%] lg:max-w-4xl z-40 "
+      <motion.div
+        initial={{ y: "-100%" }}
+        animate={{ y: 0 }}
+        {...transition}
+        className="fixed top-3 left-2/4 -translate-x-2/4 w-full! max-w-[90%] lg:max-w-4xl z-40 bg-neutral-300/10 dark:bg-neutral-600/10 backdrop-blur-2xl rounded-2xl"
       >
         <div className="w-full px-5 py-2.5 flex justify-between items-center gap-5 z-20 ">
           <Link href={"/"} className="flex justify-center items-center gap-2">
@@ -50,7 +48,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Button */}
-          <div className="flex justify-center items-center gap-2">
+          <div className="flex justify-center items-center gap-2 md:hidden">
             <Button variant={"ghost"} onClick={() => setMenu(!menu)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +56,7 @@ const Navbar = () => {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="size-6 cursor-pointer md:hidden"
+                className="size-6 cursor-pointer "
               >
                 <path
                   strokeLinecap="round"
@@ -70,7 +68,27 @@ const Navbar = () => {
             <ThemeButton />
           </div>
         </div>
-      </GlassSurface>
+      </motion.div>
+      <AnimatePresence>
+        {menu && (
+          <motion.div
+            {...fadeDown}
+            className="fixed top-20 left-2/4 -translate-x-2/4 w-full max-w-[90%] h-fit bg-neutral-300/10 dark:bg-neutral-600/10 backdrop-blur-2xl rounded-2xl md:hidden z-40"
+          >
+            <div className="flex flex-col justify-start items-center space-y-2 py-4">
+              {mainLinks.map((item) => (
+                <Link
+                  key={item.label}
+                  onClick={() => setMenu(false)}
+                  href={item.href}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
