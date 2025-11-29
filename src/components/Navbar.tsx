@@ -20,8 +20,8 @@ const Navbar = () => {
         className="fixed top-3 left-2/4 -translate-x-2/4 w-full! max-w-[90%] lg:max-w-4xl z-40 bg-neutral-300/10 dark:bg-neutral-600/10 backdrop-blur-2xl rounded-2xl"
       >
         <div className="w-full px-5 py-2.5 flex justify-between items-center gap-5 z-20 ">
-          <Link href={"/"} className="flex justify-center items-center gap-2">
-            <HeartHandshake size={35} />
+          <Link href={"/"} className="flex justify-center items-center gap-2 text-xl font-bold">
+            <HeartHandshake size={35} className="text-primary dark:text-primary-foreground" />
             A7KI
           </Link>
 

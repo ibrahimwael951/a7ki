@@ -3,6 +3,7 @@ import { fadeOnly, fadeUp, transition } from "@/Animation";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
 import { useRive } from "@rive-app/react-canvas";
+import SimpleTitle from "./ui/SimpleTitle";
 
 const Hero = () => {
   const { RiveComponent } = useRive({
@@ -21,6 +22,7 @@ const Hero = () => {
         <RiveComponent />
       </motion.div>
       <div className="flex flex-col justify-center items-center gap-2">
+        <SimpleTitle title="Welcome" />
         <motion.h1
           {...fadeUp}
           transition={{ ...transition, delay: 0.1 }}
