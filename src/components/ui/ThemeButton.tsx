@@ -1,6 +1,6 @@
 "use client";
 import { useTheme } from "next-themes";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./button";
 import { Moon, Sun } from "lucide-react";
 
@@ -24,6 +24,7 @@ export const ThemeButton = () => {
     <Button
       variant="default"
       size="icon"
+      textAnimated
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >
       {resolvedTheme === "dark" ? <Moon /> : <Sun />}

@@ -7,7 +7,7 @@ import SimpleTitle from "./ui/SimpleTitle";
 
 const Hero = () => {
   const { RiveComponent } = useRive({
-    src: "/Cat.riv",
+    src: "/Animated_Images/Cat.riv",
     autoplay: true,
     stateMachines: "State Machine 1",
   });
@@ -17,26 +17,27 @@ const Hero = () => {
       <motion.div
         {...fadeOnly}
         transition={{ ...transition, delay: 0.1 }}
-        className="w-full md:w-2/5 h-96 md:h-full"
+        className="w-full md:w-2/4 h-96 md:h-full"
       >
         <RiveComponent />
       </motion.div>
-      <div className="flex flex-col justify-center items-center gap-2">
+      <div className="w-full md:w-2/4 flex flex-col justify-center items-center gap-2">
         <SimpleTitle title="Welcome" />
         <motion.h1
           {...fadeUp}
           transition={{ ...transition, delay: 0.1 }}
-          className="text-5xl md:text-6xl lg:text-7xl max-w-3xl "
+          className="max-w-3xl "
         >
-          Measure. Reduce. Report. With AI.
+          Share Your Story. Feel Lighter.
         </motion.h1>
         <motion.p
           {...fadeUp}
           transition={{ ...transition, delay: 0.2 }}
-          className="md:text-lg lg:text-xl max-w-2xl "
+          className="max-w-2xl "
         >
-          Smarter carbon management software that helps your business cut
-          emissions and stay compliant — automatically.
+          A safe and anonymous place to let out what’s heavy on your mind. Tell
+          your story, express your feelings, and find comfort knowing someone
+          out there understands.
         </motion.p>
         <motion.div
           {...fadeUp}

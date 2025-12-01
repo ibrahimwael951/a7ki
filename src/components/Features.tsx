@@ -18,7 +18,7 @@ const Features = () => {
           viewport={{ once: true }}
           {...transition}
         >
-          All the features, none of the headaches
+          What Makes A7KI Different
         </motion.h1>
         <motion.p
           variants={fadeUp}
@@ -27,12 +27,12 @@ const Features = () => {
           viewport={{ once: true }}
           {...transition}
         >
-          We’ve bundled everything you need to track, understand, and shrink
-          your footprint without the usual hassle.
+          A7KI gives you a private space to speak freely, read others’ stories,
+          and feel supported — all without revealing who you are.
         </motion.p>
       </div>
       <section className="min-h-[70vh] w-full flex flex-col lg:flex-row justify-center items-center gap-10 mt-10">
-        <div className="w-full md:w-2/4 h-full grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="w-full lg:w-2/4 h-full grid grid-cols-1 md:grid-cols-2 gap-4">
           {features.map((item) => (
             <motion.div
               key={item.label}
@@ -67,7 +67,7 @@ const Features = () => {
           draggable={false}
           width={1000}
           height={1000}
-          className="w-full md:w-2/4 min-h-96 h-full rounded-2xl overflow-hidden object-cover"
+          className="w-full lg:w-2/4 min-h-96 h-full rounded-2xl overflow-hidden object-cover"
         />
       </section>
     </section>

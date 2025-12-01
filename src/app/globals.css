@@ -3,8 +3,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+body {
+  @apply duration-100;
+}
+
 main {
-  @apply min-h-screen px-5 lg:px-10;
+  @apply min-h-screen max-w-7xl mx-auto px-5 lg:px-10;
 }
 p {
   @apply leading-7 text-foreground/50;
