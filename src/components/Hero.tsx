@@ -2,8 +2,9 @@
 import { fadeOnly, fadeUp, transition } from "@/Animation";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
-import { useRive } from "@rive-app/react-canvas";
 import SimpleTitle from "./ui/SimpleTitle";
+import Cat from "./Custom/Cat";
+import { useRive } from "@rive-app/react-canvas";
 
 const Hero = () => {
   const { RiveComponent } = useRive({
@@ -17,7 +18,7 @@ const Hero = () => {
       <motion.div
         {...fadeOnly}
         transition={{ ...transition, delay: 0.1 }}
-        className="w-full md:w-2/4 h-96 md:h-full"
+        className="relative w-full md:w-2/4 h-96 md:h-full"
       >
         <RiveComponent />
       </motion.div>

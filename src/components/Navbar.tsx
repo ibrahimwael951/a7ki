@@ -100,19 +100,16 @@ const Navbar = () => {
                     ${pathname == item.href && "text-white"}
                     `}
                 >
-                  <AnimatePresence>
-                    {menu && (
-                      <motion.div
-                        id="Link_BG"
-                        initial={{ width: "0px" }}
-                        exit={{ width: "0px" }}
-                        animate={{
-                          width: pathname == item.href ? "100%" : "0px",
-                        }}
-                        className="w-0 h-full absolute top-0 left-2/4 -translate-x-2/4 bg-primary dark:bg-primary-foreground -z-10"
-                      />
-                    )}
-                  </AnimatePresence>
+                  <motion.div
+                    id="Link_BG"
+                    initial={{ width: "0px" }}
+                    exit={{ width: "0px" }}
+                    animate={{
+                      width: menu && pathname == item.href ? "100%" : "0px",
+                    }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="w-0 h-full absolute top-0 left-2/4 -translate-x-2/4 bg-primary dark:bg-primary-foreground -z-10"
+                  />
 
                   {item.label}
                 </Link>
