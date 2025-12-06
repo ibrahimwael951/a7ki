@@ -51,13 +51,15 @@ export default function Page() {
             </div>
           </motion.div>
         </div>
-        <form className="w-full md:w-3/5 flex flex-col justify-center items-center gap-3 bg-primary p-10 rounded-lg">
+        <form className="w-full md:w-3/5 flex flex-col justify-center items-center gap-3 border-2 border-primary/30 dark:border-primary p-10 rounded-lg">
           <motion.div
             {...fadeUp}
             transition={{ ...transition, delay: 0.6 }}
             className="w-full flex flex-col justify-start items-start"
           >
-            <label className="text-primary-foreground">Name</label>
+            <label className="text-primary dark:text-primary-foreground">
+              Name
+            </label>
             <input
               type="type"
               placeholder="Your FullName "
@@ -70,7 +72,9 @@ export default function Page() {
             transition={{ ...transition, delay: 0.7 }}
             className="w-full flex flex-col justify-start items-start"
           >
-            <label className="text-primary-foreground">Email</label>
+            <label className="text-primary dark:text-primary-foreground">
+              Email
+            </label>
             <input
               type="email"
               placeholder="Your@gmail.com"
@@ -83,18 +87,16 @@ export default function Page() {
             transition={{ ...transition, delay: 0.8 }}
             className="w-full flex flex-col justify-start items-start"
           >
-            <label className="text-primary-foreground">Message</label>
+            <label className="text-primary dark:text-primary-foreground">
+              Message
+            </label>
             <textarea
               placeholder="Your Message"
               rows={5}
               className="w-full p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none resize-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200"
             />
           </motion.div>
-          <Button
-            variant={"secondary"}
-            type="submit"
-            className="w-full text-primary-foreground"
-          >
+          <Button type="submit" className="w-full text-primary-foreground">
             Send Message
           </Button>
         </form>

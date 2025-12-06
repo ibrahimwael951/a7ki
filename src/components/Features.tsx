@@ -15,7 +15,7 @@ const Features = () => {
           variants={fadeUp}
           initial="initial"
           whileInView="animate"
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
           {...transition}
         >
           What Makes A7KI Different
@@ -24,14 +24,14 @@ const Features = () => {
           variants={fadeUp}
           initial="initial"
           whileInView="animate"
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
           {...transition}
         >
           A7KI gives you a private space to speak freely, read others’ stories,
           and feel supported — all without revealing who you are.
         </motion.p>
       </div>
-      <section className="min-h-[70vh] w-full flex flex-col lg:flex-row justify-center items-center gap-10 mt-10">
+      <section className="min-h-[70vh] w-full flex flex-col lg:flex-row justify-center items-center gap-10">
         <div className="w-full lg:w-2/4 h-full grid grid-cols-1 md:grid-cols-2 gap-4">
           {features.map((item) => (
             <motion.div
@@ -39,19 +39,19 @@ const Features = () => {
               variants={fadeUp}
               initial="initial"
               whileInView="animate"
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.2, margin: "-100px" }}
               whileHover={{ y: -5 }}
-              className="group w-full h-44 md:h-full flex flex-col justify-between items-start bg-primary text-primary-foreground overflow-hidden p-4 rounded-xl "
+              className="group w-full h-44 md:h-full flex flex-col justify-between items-start border-2 border-primary/30 dark:border-primary hover:bg-primary hover:text-primary-foreground overflow-hidden p-4 rounded-xl transition-colors duration-200"
             >
               <item.icon
                 size={40}
-                className="mb-4 group-hover:rotate-45 duration-300"
+                className="mb-4 group-hover:rotate-45 text-primary dark:text-primary-foreground group-hover:text-primary-foreground transition-transform duration-300"
               />
               <div>
-                <h6>{item.label}</h6>
-                <p className="text-secondary-foreground /80!">
-                  {item.description}
-                </p>
+                <h6 className="text-primary dark:text-primary-foreground group-hover:text-primary-foreground">
+                  {item.label}
+                </h6>
+                <p className="group-hover:text-white/60!">{item.description}</p>
               </div>
             </motion.div>
           ))}
@@ -61,7 +61,7 @@ const Features = () => {
           variants={fadeUp}
           initial="initial"
           whileInView="animate"
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
           src={"/Happy_2Girls.jpg"}
           alt="2 happy girls"
           draggable={false}

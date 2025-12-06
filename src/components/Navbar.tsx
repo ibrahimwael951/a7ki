@@ -1,24 +1,31 @@
 "use client";
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { mainLinks } from "@/data/MainLinks";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { HeartHandshake } from "lucide-react";
 import { ThemeButton } from "./ui/ThemeButton";
-import { AnimatePresence } from "motion/react";
 import { fadeDown, transition } from "@/Animation";
 import TextAnimated from "./ui/TextAnimated";
+import { usePathname } from "next/navigation";
+import { useIsMobile } from "@/hooks/IsMobile";
 
 const Navbar = () => {
   const [menu, setMenu] = useState<Boolean>(false);
+  const isMobile = useIsMobile();
+  const pathname = usePathname();
   return (
     <>
       <motion.div
         initial={{ y: "-100%" }}
-        animate={{ y: 0 }}
+        animate={{
+          y: 0,
+          height: isMobile ? (menu ? "325px" : "fit-content") : "fit-content",
+        }}
         {...transition}
-        className="fixed top-3 left-2/4 -translate-x-2/4 w-full! max-w-[90%] lg:max-w-4xl z-40 bg-neutral-300/10 dark:bg-neutral-600/10 backdrop-blur-2xl rounded-2xl"
+        whileHover="Show"
+        className="fixed top-3 left-2/4 -translate-x-2/4 w-full! max-w-[90%] lg:max-w-4xl z-50 bg-neutral-300/10 dark:bg-neutral-600/10 backdrop-blur-2xl rounded-2xl"
       >
         <div className="w-full px-5 py-2.5 flex justify-between items-center gap-5 z-20 ">
           <Link
@@ -34,20 +41,30 @@ const Navbar = () => {
 
           <div className="hidden md:flex justify-center items-center gap-4 ">
             {mainLinks.map((item) => (
-              <TextAnimated key={item.label} href={item.href}>
-                {item.label}
-              </TextAnimated>
+              <div key={item.label} className="relative">
+                <TextAnimated href={item.href}>{item.label}</TextAnimated>
+                <motion.div
+                  variants={{
+                    Show: { width: pathname == item.href ? "100%" : "0%" },
+                  }}
+                  transition={{ duration: 0.1 }}
+                  className={` mx-auto w-0 h-0.5 bg-accent dark:bg-primary-foreground  `}
+                />
+              </div>
             ))}
           </div>
 
           <div className="hidden md:flex justify-center items-center gap-3">
             <ThemeButton />
-            <Button link={"/send"}>Send Message</Button>
+            {pathname != "/send" && (
+              <Button link={"/send"}>Send Message</Button>
+            )}
           </div>
 
           {/* Mobile Button */}
           <div className="flex justify-center items-center gap-2 md:hidden">
-            <Button variant={"ghost"} onClick={() => setMenu(!menu)}>
+            <ThemeButton />
+            <Button onClick={() => setMenu(!menu)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -63,27 +80,65 @@ const Navbar = () => {
                 />
               </svg>
             </Button>
-            <ThemeButton />
           </div>
         </div>
       </motion.div>
-      <AnimatePresence>
-        {menu && (
+      <AnimatePresence mode="wait">
+        {isMobile && menu && (
           <motion.div
+            id="Menu_links"
             {...fadeDown}
-            className="fixed top-20 left-2/4 -translate-x-2/4 w-full max-w-[90%] h-fit bg-neutral-300/10 dark:bg-neutral-600/10 backdrop-blur-2xl rounded-2xl md:hidden z-40"
+            className="fixed top-19 left-2/4 -translate-x-2/4 w-full max-w-[90%] h-fit md:hidden z-50"
           >
-            <div className="flex flex-col justify-start items-center space-y-2 py-4">
+            <div className="flex flex-col justify-start items-center space-y-2 p-5">
               {mainLinks.map((item) => (
                 <Link
                   key={item.label}
                   onClick={() => setMenu(false)}
                   href={item.href}
+                  className={`relative text-center w-full rounded-2xl py-1.5 px-3 overflow-hidden 
+                    ${pathname == item.href && "text-white"}
+                    `}
                 >
+                  <AnimatePresence>
+                    {menu && (
+                      <motion.div
+                        id="Link_BG"
+                        initial={{ width: "0px" }}
+                        exit={{ width: "0px" }}
+                        animate={{
+                          width: pathname == item.href ? "100%" : "0px",
+                        }}
+                        className="w-0 h-full absolute top-0 left-2/4 -translate-x-2/4 bg-primary dark:bg-primary-foreground -z-10"
+                      />
+                    )}
+                  </AnimatePresence>
+
                   {item.label}
                 </Link>
               ))}
             </div>
+            <motion.div
+              {...fadeDown}
+              transition={{ ...transition, delay: 0.3 }}
+              className="mb-3 flex justify-center items-center gap-2 px-4"
+            >
+              <Button
+                link={"/dashboard"}
+                variant={"outline"}
+                onClick={() => setMenu(false)}
+                className="w-2/4"
+              >
+                Dashboard
+              </Button>
+              <Button
+                link={"/send"}
+                onClick={() => setMenu(false)}
+                className="w-2/4"
+              >
+                Send Message
+              </Button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

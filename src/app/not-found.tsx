@@ -11,11 +11,11 @@ export default function notFound() {
     autoplay: true,
   });
   return (
-    <main className="flex flex-col md:flex-row justify-center items-center gap-5 ">
+    <main className="flex flex-col md:flex-row mt-16 md:mt-0 md:justify-center items-center gap-5 ">
       <motion.div
         {...fadeOnly}
         transition={{ ...transition, delay: 0.1 }}
-        className="w-full md:w-2/4 h-[500px]   "
+        className="w-full md:w-2/4 h-96 md:h-[500px]  "
       >
         <RiveComponent />
       </motion.div>
@@ -33,7 +33,7 @@ export default function notFound() {
           className="flex items-center gap-4 mt-5"
         >
           <Button link="/">Home</Button>
-          <Button link="/contact">Contact Support</Button>
+          <Button variant="ghost" link="/contact">Contact Support</Button>
         </motion.div>
       </div>
     </main>

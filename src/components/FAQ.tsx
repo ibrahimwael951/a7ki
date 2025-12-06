@@ -4,40 +4,62 @@ import { FAQ_Questions } from "@/data/FAQ";
 import { Forward } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import React, { useState } from "react";
+import SimpleTitle from "./ui/SimpleTitle";
+import { usePathname } from "next/navigation";
 
 const FAQ = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const pathname = usePathname();
+  const isContactPage = pathname === "/contact" ? true : false;
   return (
-    <section className="flex flex-col md:flex-row justify-between gap-4 my-10 ">
+    <section
+      className={`flex ${
+        isContactPage
+          ? "flex-col md:flex-row justify-between"
+          : " flex-col justify-center items-center text-center"
+      } gap-4 my-10 `}
+    >
       <div className="w-full md:w-2/4 max-w-xl">
-        <motion.h3
+        <SimpleTitle
+          title="FAQs"
+          className={`mb-3 ${!isContactPage && "mx-auto"} `}
+        />
+        <motion.div
           variants={fadeUp}
           initial="initial"
           whileInView="animate"
-          viewport={{ once: true, margin: "-100px", amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
           {...transition}
         >
-          Frequently Asked Questions
-        </motion.h3>
+          {isContactPage ? (
+            <h3>Frequently Asked Questions</h3>
+          ) : (
+            <h2>Frequently Asked Questions</h2>
+          )}
+        </motion.div>
         <motion.p
           variants={fadeUp}
           initial="initial"
           whileInView="animate"
-          viewport={{ once: true, margin: "-100px", amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
           {...transition}
         >
           See if we've answered you question already. If not then don't hesitate
           to get in touch
         </motion.p>
       </div>
-      <div className="w-full md:w-2/4 flex flex-col justify-start gap-4">
+      <div
+        className={`w-full ${
+          isContactPage ? "md:w-2/4 md:mt-20" : "max-w-xl md:max-w-3xl"
+        } flex flex-col justify-start gap-4`}
+      >
         {FAQ_Questions.map((item) => (
           <motion.div
             key={item.label}
             variants={fadeUp}
             initial="initial"
             whileInView="animate"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, amount: 0.2, margin: "-100px" }}
             {...transition}
             onClick={() =>
               setOpenFaq(
@@ -55,7 +77,7 @@ const FAQ = () => {
               <Forward
                 className={`${
                   openFaq == FAQ_Questions.indexOf(item)
-                    ? "rotate-180"
+                    ? "rotate-150"
                     : "rotate-0 "
                 }
                 duration-300
@@ -64,7 +86,9 @@ const FAQ = () => {
             </div>
             <AnimatePresence>
               {openFaq == FAQ_Questions.indexOf(item) && (
-                <motion.p {...fadeUp}>{item.description}</motion.p>
+                <motion.p {...fadeUp} className="text-start">
+                  {item.description}
+                </motion.p>
               )}
             </AnimatePresence>
           </motion.div>

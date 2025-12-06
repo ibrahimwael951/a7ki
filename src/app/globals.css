@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 body {
-  @apply duration-100;
+  @apply selection:bg-primary dark:selection:bg-primary-foreground selection:text-white transition-colors duration-100;
 }
 
 main {

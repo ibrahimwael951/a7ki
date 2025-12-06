@@ -7,8 +7,10 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import { fadeOnly, transition } from "@/Animation";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+  const pathName = usePathname();
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -35,7 +37,7 @@ const Footer = () => {
       setLoading(false);
     }
   };
-
+  if (pathName == "/send") return;
   return (
     <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-5 md:px-10 min-h-96 mb-10 mt-20 max-w-7xl mx-auto">
       <div className="max-w-72 h-full text-start">
