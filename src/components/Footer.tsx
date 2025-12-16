@@ -38,6 +38,8 @@ const Footer = () => {
     }
   };
   if (pathName == "/send") return;
+  if (pathName.slice(0, 6) == "/Admin") return;
+  if (pathName.slice(0, 10) == "/dashboard") return;
   return (
     <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-5 md:px-10 min-h-96 mb-10 mt-20 max-w-7xl mx-auto">
       <div className="max-w-72 h-full text-start">

@@ -37,6 +37,10 @@ h6 {
   @apply font-medium text-base md:text-lg lg:text-xl leading-snug;
 }
 
+.mark{
+  @apply text-primary dark:text-primary-foreground
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
