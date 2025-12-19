@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
+import LenisProvider from "@/providers/Lenis_Provider";
 import Navbar from "@/components/Navbar";
-import SmoothScroll from "@/components/SmoothScroll";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 
@@ -55,13 +55,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <SmoothScroll />
-          <Navbar />
-          {children}
-          <Footer />
-          <Toaster richColors closeButton />
-        </ThemeProvider>
+        <LenisProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Navbar />
+            {children}
+            <Footer />
+            <Toaster richColors closeButton />
+          </ThemeProvider>
+        </LenisProvider>
       </body>
     </html>
   );

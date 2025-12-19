@@ -2,12 +2,14 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useRive } from "@rive-app/react-canvas";
 import { useEffect, useState } from "react";
-import { fadeOnly, fadeRight, fadeUp, transition } from "@/Animation";
+import { fadeOnly, fadeUp, transition } from "@/Animation";
 import TextType from "@/components/TextType";
 import { Button } from "@/components/ui/button";
 import { Examples } from "@/data/Messages_Examples";
 import { X } from "lucide-react";
 import { toast } from "sonner";
+import axios from "axios";
+import { useSession } from "@/lib/auth-client";
 
 const Messages = [
   "Hi there!",
@@ -20,10 +22,11 @@ export default function Page() {
   const [message, setMessage] = useState(0);
   const [showForm, setShowForm] = useState<boolean | null>(null);
   const [buttonEnabled, setButtonEnabled] = useState(false);
-  const [thoughts, setThoughts] = useState("");
+  const [thought, setThought] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
+  const { data: session, isPending } = useSession();
 
   const { RiveComponent } = useRive({
     src: "/Animated_Images/Cute_Girl.riv",
@@ -60,7 +63,8 @@ export default function Page() {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    if (thoughts.trim().length <= 120)
+    if (!session) return;
+    if (thought.trim().length <= 120)
       return toast.error("Type more than 120 letters", {
         description: "you can add more details to your story",
         position: "bottom-right",
@@ -69,9 +73,20 @@ export default function Page() {
     setIsSubmitting(true);
 
     await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      await axios.post("/api/thought", {
+        thought,
+        userId: session.user.id,
+      });
 
-    setIsSubmitting(false);
-    setSubmitted(true);
+      setSubmitted(true);
+    } catch (error: any) {
+      return toast.error(error.response.data.error || "Unknown Error", {
+        position: "bottom-right",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -154,15 +169,15 @@ export default function Page() {
 
                     <motion.div variants={fadeUp} className="relative w-full">
                       <textarea
-                        value={thoughts}
-                        onChange={(e) => setThoughts(e.target.value)}
+                        value={thought}
+                        onChange={(e) => setThought(e.target.value)}
                         maxLength={2000}
                         placeholder="Write your negative thoughts here... Remember, this is anonymous and safe."
                         className="w-full min-h-40 h-fit max-h-[400px] p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 resize-y"
                         disabled={isSubmitting}
                       />
                       <p className="absolute bottom-3 right-4">
-                        {thoughts.length}/ 2000
+                        {thought.length}/ 2000
                       </p>
                     </motion.div>
 

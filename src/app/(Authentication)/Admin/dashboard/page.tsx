@@ -8,17 +8,30 @@ import { motion } from "framer-motion";
 import { signOutAction } from "../../Actions/auth";
 import Admin_Loading from "@/components/ui/Admin_Loading";
 import { fadeUp, transition } from "@/Animation";
+import { useAdmin } from "../AdminContext";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const MotionLink = motion.create(Link);
 
 export default function Page() {
   const { data: session, isPending, refetch, isRefetching } = useSession();
-
+  const { isAdmin, loadingAdmin } = useAdmin();
   const handleSignIn = async () => {
     await signOutAction();
     await refetch();
   };
-  if (isPending || isRefetching || !session) return <Admin_Loading />;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (loadingAdmin) return;
+    if (!isAdmin) {
+      router.push("/Admin");
+    }
+  }, [isAdmin, loadingAdmin, router]);
+
+  if (isPending || isRefetching || !isAdmin || loadingAdmin)
+    return <Admin_Loading />;
   if (session)
     return (
       <main className="pt-20 p-6">
@@ -59,9 +72,9 @@ export default function Page() {
                   key={item.path}
                   href={item.path}
                   className="group block"
-                >
-                  <div className="h-full border-2 border-primary rounded-2xl p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                    <div className="flex items-start gap-4 mb-4">
+                > 
+                  <div className="h-full border-2 border-primary/20 dark:border-primary rounded-2xl p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                    <div className="flex items-start gap-4 mb-4"> 
                       <div className="p-4 rounded-xl bg-primary/20 dark:bg-primary-foreground/20">
                         <item.icon className="w-8 h-8 text-primary dark:text-primary-foreground" />
                       </div>

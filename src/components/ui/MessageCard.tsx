@@ -2,7 +2,7 @@
 import { useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Clock, Delete, Mail, MessageSquare, User, X } from "lucide-react";
+import { Clock, Mail, MessageSquare, Trash2, User, X } from "lucide-react";
 import { Contact_Message } from "@/types/ContactMessages";
 import axios from "axios";
 import { toast } from "sonner";
@@ -56,7 +56,7 @@ const MessageCard = ({
           onClick={() => setWarning(true)}
           className="absolute top-0 right-0 rounded-none rounded-bl-2xl "
         >
-          <Delete />
+          <Trash2 />
         </Button>
         <div className="flex items-center gap-1 mb-4">
           <User strokeWidth={3} size={35} className="mark  shrink-0 mt-1" />

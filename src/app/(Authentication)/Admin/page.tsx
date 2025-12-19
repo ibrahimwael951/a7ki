@@ -6,17 +6,28 @@ import { useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import Admin_Loading from "@/components/ui/Admin_Loading";
 import { fadeUp, transition } from "@/Animation";
+ import { useEffect } from "react";
+import { useAdmin } from "./AdminContext";
+import { useRouter } from "next/navigation";
 
 export default function AdminPanel() {
   const { data: session, isPending, refetch, isRefetching } = useSession();
+  const { isAdmin, loadingAdmin } = useAdmin();
+  const router = useRouter();
 
   const handleSignIn = async (formData: FormData) => {
     await signInAction(formData);
     await refetch();
   };
 
-  if (isPending || session || isRefetching) return <Admin_Loading />;
-  return (  
+  useEffect(() => {
+    if (loadingAdmin) return;
+    if (isAdmin) {
+      router.push("/Admin/dashboard");
+    }
+  }, [isAdmin, loadingAdmin, router]);
+  if (isPending || isRefetching) return <Admin_Loading />;
+  return (
     <main className="flex items-center justify-center p-6">
       <div
         className="w-full max-w-md"

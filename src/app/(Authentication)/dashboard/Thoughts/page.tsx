@@ -3,18 +3,13 @@ import { fadeOnly, fadeUp } from "@/Animation";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Bug, PencilOff } from "lucide-react";
 import Admin_Loading from "@/components/ui/Admin_Loading";
 import { useRouter } from "next/navigation";
-
-type Thought = {
-  id?: string;
-  title?: string;
-  thought: string;
-  createdAt?: string;
-};
+import { Thought } from "@/types/Thoughts";
+import Thought_Card from "@/components/ui/Thought_Card";
+import axios from "axios";
 
 export default function Page() {
   const { data: session, isPending } = useSession();
@@ -29,7 +24,7 @@ export default function Page() {
     setError(null);
     const userId = session.user.id;
     try {
-      const res = await axios.get("/api/thoughts", { params: { userId } });
+      const res = await axios.get("/api/thought", { params: { userId } });
       setData(res.data);
     } catch (err: any) {
       setError(
@@ -54,10 +49,10 @@ export default function Page() {
 
   if (!session || isPending) return <Admin_Loading />;
   return (
-    <main className="pt-20">
+    <main className="py-20">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold">
-          my <span className="mark">Thought</span>
+          My <span className="mark">Thought</span>
         </h2>
         <Button
           link={"/dashboard"}
@@ -67,10 +62,7 @@ export default function Page() {
         </Button>
       </div>
 
-      <motion.div
-        {...fadeUp}
-        className="mt-8 p-6 rounded-2xl hover:shadow-lg border border-primary/30 dark:border-primary duration-300"
-      >
+      <motion.div {...fadeUp} className="mt-8">
         {loading && (
           <motion.div
             {...fadeOnly}
@@ -100,7 +92,7 @@ export default function Page() {
         )}
 
         {!loading && !error && data && (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-5">
             {data.length === 0 && (
               <motion.div
                 {...fadeOnly}
@@ -114,7 +106,7 @@ export default function Page() {
                 </h4>
                 <p>You can contact Us if you want btw</p>
                 <div className="flex items-center gap-5">
-                  <Button link={"/contact"}>Contact Us</Button>
+                  <Button link={"/send"}>Send Thought</Button>
                   <Button link={"/dashboard"} variant={"outline"}>
                     dashboard
                   </Button>
@@ -122,15 +114,14 @@ export default function Page() {
               </motion.div>
             )}
             {data.map((item) => (
-              <div>
-                {item.title && <div className="font-medium">{item.title}</div>}
-                <div className="text-sm mt-1">{item.thought}</div>
-                {item.createdAt && (
-                  <div className="text-xs mt-2 text-muted-foreground">
-                    At: {new Date(item.createdAt).toLocaleString()}
-                  </div>
-                )}
-              </div>
+              <Thought_Card
+                key={item._id}
+                ThoughtFeedback={item.feedback}
+                thought={item.thought}
+                rank={item.rank}
+                createdAt={item.createdAt}
+                withoutSlice 
+              />
             ))}
           </div>
         )}

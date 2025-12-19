@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     if (!userId) {
       return NextResponse.json("UserId Not Found", { status: 400 });
     }
-    connectDB();
+    await connectDB();
     const IsAdmin = await is_admin.findOne({ userId });
 
     return IsAdmin

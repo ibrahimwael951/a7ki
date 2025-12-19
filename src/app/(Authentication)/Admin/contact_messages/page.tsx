@@ -6,15 +6,17 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import MessageCard from "@/components/ui/MessageCard";
-import { useSession } from "@/lib/auth-client";
 import Admin_Loading from "@/components/ui/Admin_Loading";
 import { fadeLeft, fadeOnly } from "@/Animation";
+import { useAdmin } from "../AdminContext";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Contact_Message[] | null>(null);
   const [error, setError] = useState();
-  const { data: session, isPending } = useSession();
+  const { isAdmin, loadingAdmin } = useAdmin();
+  const router = useRouter();
 
   async function FetchData() {
     setLoading(true);
@@ -29,17 +31,24 @@ export default function Page() {
   }
 
   useEffect(() => {
-    if (isPending || !session) return;
+    if (loadingAdmin || !isAdmin) return;
     FetchData();
-  }, [session, isPending]);
+  }, [isAdmin, loadingAdmin]);
+
+  useEffect(() => {
+    if (loadingAdmin) return;
+    if (!isAdmin) {
+      router.push("/Admin");
+    }
+  }, [isAdmin, loadingAdmin, router]);
 
   if (error)
     return (
       <main className="flex justify-center items-center text-4xl">{error}</main>
     );
-  if (loading || !data || !session || isPending) return <Admin_Loading />;
+  if (loading || !data || !isAdmin || loadingAdmin) return <Admin_Loading />;
   return (
-    <main className="mt-20 p-6">
+    <main className="pt-20 p-6">
       <section className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-3 md:gap-10 mb-8">
         <motion.h2 {...fadeLeft} className="flex items-center gap-3">
           <MessageSquare
@@ -49,9 +58,14 @@ export default function Page() {
           />
           Contact Messages
         </motion.h2>
-        <Button onClick={FetchData} className="w-2/3 md:w-fit">
-          Refresh
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button onClick={FetchData} className="w-2/3 md:w-fit">
+            Refresh
+          </Button>
+          <Button link={"/Admin/dashboard"} variant={"outline"}>
+            Go Back
+          </Button>
+        </div>
       </section>
       <section>
         {data.length >= 1 ? (
