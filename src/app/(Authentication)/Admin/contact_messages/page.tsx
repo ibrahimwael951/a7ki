@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import MessageCard from "@/components/ui/MessageCard";
 import Admin_Loading from "@/components/ui/Admin_Loading";
 import { fadeLeft, fadeOnly } from "@/Animation";
-import { useAdmin } from "../AdminContext";
+import { useAdmin } from "../../../../providers/AdminContext";
 import { useRouter } from "next/navigation";
 
 export default function Page() {

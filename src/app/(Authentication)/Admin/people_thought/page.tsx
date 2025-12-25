@@ -8,7 +8,7 @@ import Admin_Loading from "@/components/ui/Admin_Loading";
 import { fadeLeft, fadeOnly, fadeUp } from "@/Animation";
 import { Thought } from "@/types/Thoughts";
 import Thought_Card from "@/components/ui/Thought_Card";
-import { useAdmin } from "../AdminContext";
+import { useAdmin } from "../../../../providers/AdminContext";
 import { useRouter } from "next/navigation";
 import { useIsTablet } from "@/hooks/IsMobile";
 export default function Page() {

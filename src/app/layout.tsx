@@ -6,6 +6,7 @@ import LenisProvider from "@/providers/Lenis_Provider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
+import { AdminProvider } from "../providers/AdminContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -55,14 +56,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <LenisProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <Navbar />
-            {children}
-            <Footer />
-            <Toaster richColors closeButton />
-          </ThemeProvider>
-        </LenisProvider>
+        <AdminProvider>
+          <LenisProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <Navbar />
+              {children}
+              <Footer />
+              <Toaster richColors closeButton />
+            </ThemeProvider>
+          </LenisProvider>
+        </AdminProvider>
       </body>
     </html>
   );

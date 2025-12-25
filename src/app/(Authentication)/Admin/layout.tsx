@@ -1,5 +1,5 @@
 "use client";
-import { AdminProvider } from "./AdminContext";
+import { AdminProvider } from "../../../providers/AdminContext";
 
 export default function RootLayout({
   children,

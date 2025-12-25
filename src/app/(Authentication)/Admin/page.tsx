@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import Admin_Loading from "@/components/ui/Admin_Loading";
 import { fadeUp, transition } from "@/Animation";
  import { useEffect } from "react";
-import { useAdmin } from "./AdminContext";
+import { useAdmin } from "../../../providers/AdminContext";
 import { useRouter } from "next/navigation";
 
 export default function AdminPanel() {

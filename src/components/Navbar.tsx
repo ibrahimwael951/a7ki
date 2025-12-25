@@ -4,17 +4,18 @@ import { motion, AnimatePresence } from "motion/react";
 import { mainLinks } from "@/data/MainLinks";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { HeartHandshake } from "lucide-react";
-import { ThemeButton } from "./ui/ThemeButton";
+import { HeartHandshake, UserRound, UserStar } from "lucide-react";
 import { fadeDown, transition } from "@/Animation";
 import TextAnimated from "./ui/TextAnimated";
 import { usePathname } from "next/navigation";
 import { useIsMobile } from "@/hooks/IsMobile";
+import { useAdmin } from "@/providers/AdminContext";
 
 const Navbar = () => {
   const [menu, setMenu] = useState<Boolean>(false);
   const isMobile = useIsMobile();
   const pathname = usePathname();
+  const { isAdmin, loadingAdmin } = useAdmin();
   return (
     <>
       <motion.div
@@ -55,32 +56,38 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex justify-center items-center gap-3">
-            <ThemeButton />
+            {!loadingAdmin && isAdmin ? (
+              <Button link={"/Admin/dashboard"}>
+                <UserStar />
+              </Button>
+            ) : (
+              <Button link={"/dashboard"}>
+                <UserRound />
+              </Button>
+            )}
             {pathname != "/send" && (
               <Button link={"/send"}>Send Message</Button>
             )}
           </div>
 
           {/* Mobile Button */}
-          <div className="flex justify-center items-center gap-2 md:hidden">
-            <ThemeButton />
-            <Button onClick={() => setMenu(!menu)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6 cursor-pointer "
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 9h16.5m-16.5 6.75h16.5"
-                />
-              </svg>
-            </Button>
-          </div>
+
+          <Button onClick={() => setMenu(!menu)} className="md:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6 cursor-pointer "
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.75 9h16.5m-16.5 6.75h16.5"
+              />
+            </svg>
+          </Button>
         </div>
       </motion.div>
       <AnimatePresence mode="wait">
@@ -121,7 +128,7 @@ const Navbar = () => {
               className="mb-3 flex justify-center items-center gap-2 px-4"
             >
               <Button
-                link={"/dashboard"}
+                link={isAdmin ? "/Admin/dashboard" : "/dashboard"}
                 variant={"outline"}
                 onClick={() => setMenu(false)}
                 className="w-2/4"

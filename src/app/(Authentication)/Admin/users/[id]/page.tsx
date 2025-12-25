@@ -7,7 +7,7 @@ import { Contact_Message } from "@/types/ContactMessages";
 import axios from "axios";
 import { use, useEffect, useState } from "react";
 import { Thought } from "@/types/Thoughts";
-import { useAdmin } from "../../AdminContext";
+import { useAdmin } from "../../../../../providers/AdminContext";
 import Admin_Loading from "@/components/ui/Admin_Loading";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
