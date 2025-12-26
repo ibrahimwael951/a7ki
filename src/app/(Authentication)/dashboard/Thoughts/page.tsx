@@ -124,6 +124,7 @@ export default function Page() {
             {data.map((item) => (
               <Thought_Card
                 key={item._id}
+                thoughtId={item._id}
                 ThoughtFeedback={item.feedback}
                 thought={item.thought}
                 rank={item.rank}

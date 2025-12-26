@@ -130,7 +130,7 @@ export async function GET(req: Request) {
               },
             },
             {
-              $sort: { createdAt: -1 },  
+              $sort: { createdAt: -1 },
             },
           ],
           as: "feedback",
@@ -139,6 +139,85 @@ export async function GET(req: Request) {
     ]);
 
     return NextResponse.json(Thoughts, { status: 200 });
+  } catch (err) {
+    return NextResponse.json(
+      { error: "Internal Server Error", details: (err as Error).message },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    const { message, thoughtId } = body;
+
+    if (!thoughtId) {
+      return NextResponse.json("thought ID Not Found", { status: 401 });
+    }
+    if (!message) {
+      return NextResponse.json(
+        { error: "Message is required" },
+        { status: 400 }
+      );
+    }
+    await connectDB();
+
+    let rank = null;
+    try {
+      const response = await axios.post(
+        `${process.env.AI_API}/responses`,
+        {
+          model: process.env.AI_MODEL,
+          input: `You are a content moderation classifier.
+                Analyze the following message and determine whether it contains sexual content.
+
+                Respond with ONE word only, based on your confidence level:
+
+                bad → if you are 100% certain the message is sexual
+
+                kinda bad → if you are ~70% sure the message is sexual
+
+                okay → if you are ~50% unsure or neutral
+
+                good → if you are ~20% sure or confident it is not sexual
+
+                Unknown → if you cannot determine confidently
+
+                Do not explain your reasoning.
+                Do not add punctuation.
+                Do not add extra text.
+
+              Message to analyze:
+              ${message}`,
+          max_output_tokens: 9000,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.AI_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const messageBlock = response.data.output.find(
+        (item: any) => item.type === "message"
+      );
+      rank = messageBlock?.content?.[0]?.text ?? "Unknown";
+    } catch (err) {
+      return NextResponse.json("Failed to fetch AI Response", {
+        status: 400,
+      });
+    }
+
+    const thought = await Thought.findByIdAndUpdate(thoughtId, {
+      thought: message,
+      rank,
+    });
+
+    if (!thought) {
+      return NextResponse.json({ error: "Thought not found" }, { status: 404 });
+    }
+    return NextResponse.json(thought, { status: 200 });
   } catch (err) {
     return NextResponse.json(
       { error: "Internal Server Error", details: (err as Error).message },

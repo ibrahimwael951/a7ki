@@ -4,6 +4,7 @@ import { fadeOnly, fadeUp, transition } from "@/Animation";
 import { motion } from "motion/react";
 import { useRive } from "@rive-app/react-canvas";
 import { Button } from "@/components/ui/button";
+import { T } from "gt-next";
 
 export default function notFound() {
   const { RiveComponent } = useRive({
@@ -20,21 +21,25 @@ export default function notFound() {
         <RiveComponent />
       </motion.div>
       <div className="max-w-xl">
-        <motion.h1 {...fadeUp} transition={{ ...transition, delay: 0.1 }}>
-          ERROR <span className="text-accent-foreground">404</span>
-        </motion.h1>
-        <motion.p {...fadeUp} transition={{ ...transition, delay: 0.2 }}>
-          Oops! The page you're looking for doesn't exist. But don't worry, our
-          curious cat is here to guide you back home.
-        </motion.p>
-        <motion.div
-          {...fadeUp}
-          transition={{ ...transition, delay: 0.3 }}
-          className="flex items-center gap-4 mt-5"
-        >
-          <Button link="/">Home</Button>
-          <Button variant="ghost" link="/contact">Contact Support</Button>
-        </motion.div>
+        <T>
+          <motion.h1 {...fadeUp} transition={{ ...transition, delay: 0.1 }}>
+            ERROR <span className="text-accent-foreground">404</span>
+          </motion.h1>
+          <motion.p {...fadeUp} transition={{ ...transition, delay: 0.2 }}>
+            Oops! The page you're looking for doesn't exist. But don't worry,
+            our curious cat is here to guide you back home.
+          </motion.p>
+          <motion.div
+            {...fadeUp}
+            transition={{ ...transition, delay: 0.3 }}
+            className="flex items-center gap-4 mt-5"
+          >
+            <Button link="/">Home</Button>
+            <Button variant="ghost" link="/contact">
+              Contact Support
+            </Button>
+          </motion.div>
+        </T>
       </div>
     </main>
   );

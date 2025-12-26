@@ -20,6 +20,9 @@ export async function GET(req: Request) {
           from: "thoughtfeedbacks",
           localField: "_id",
           foreignField: "thoughtId",
+          pipeline: [
+            { $sort: { createdAt: -1 } },
+          ],
           as: "feedback",
         },
       },

@@ -19,12 +19,12 @@ const System_Setting = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-5">
         <motion.div
           {...fadeUp}
-          className="relative p-6 rounded-2xl flex justify-between items-center border border-primary/30 dark:border-primary shadow-sm text-left hover:shadow-lg focus:outline-none duration-200 disabled:cursor-not-allowed"
+          className="relative p-6 rounded-2xl flex items-start lg:items-center gap-3 border border-primary/30 dark:border-primary shadow-sm text-left hover:shadow-lg focus:outline-none duration-200 disabled:cursor-not-allowed"
         >
-          <div className="flex items-center gap-4">
-            <div className="p-4 rounded-xl bg-primary/20 dark:bg-primary-foreground/5">
-              <Shirt className="w-8 h-8 text-primary dark:text-primary-foreground" />
-            </div>
+          <div className="p-4 rounded-xl bg-primary/20 dark:bg-primary-foreground/5">
+            <Shirt className="w-8 h-8 text-primary dark:text-primary-foreground" />
+          </div>
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 w-full">
             <T>
               <div className="text-start">
                 <div className="font-semibold text-lg">theme</div>
@@ -34,19 +34,19 @@ const System_Setting = () => {
                 </div>
               </div>
             </T>
-          </div>
-          <div className="w-fit">
-            <ThemeSelect />
+            <div className="w-fit">
+              <ThemeSelect />
+            </div>
           </div>
         </motion.div>
         <motion.div
-          className="relative p-6 rounded-2xl flex justify-between items-center border border-primary/30 dark:border-primary shadow-sm text-left hover:shadow-lg focus:outline-none duration-200 disabled:cursor-not-allowed"
+          className="relative p-6 rounded-2xl flex items-start lg:items-center gap-3 border border-primary/30 dark:border-primary shadow-sm text-left hover:shadow-lg focus:outline-none duration-200 disabled:cursor-not-allowed"
           {...fadeUp}
         >
-          <div className="flex items-center gap-4">
-            <div className="p-4 rounded-xl bg-primary/20 dark:bg-primary-foreground/5">
-              <Languages className="w-8 h-8 text-primary dark:text-primary-foreground" />
-            </div>
+          <div className="p-4 rounded-xl bg-primary/20 dark:bg-primary-foreground/5">
+            <Languages className="w-8 h-8 text-primary dark:text-primary-foreground" />
+          </div>
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 w-full">
             <div className="text-start">
               <T>
                 <div className="font-semibold text-lg">Language</div>
@@ -55,9 +55,9 @@ const System_Setting = () => {
                 </div>
               </T>
             </div>
-          </div>
-          <div className="w-fit">
-            <LocaleSelector />
+            <div className="w-fit">
+              <LocaleSelector />
+            </div>
           </div>
         </motion.div>
       </div>{" "}
