@@ -21,11 +21,11 @@ const TextAnimated = ({ a, className, href, children }: Props) => {
       </a>
     );
   return (
-    <div className={cn("relative group overflow-hidden", className)}>
+    <div className={cn("relative group overflow-hidden w-full", className)}>
       <div className="group-hover:-translate-y-full duration-150">
         {children}
       </div>
-      <div className="absolute top-2/4 left-2/4 -translate-x-2/4 translate-y-full group-hover:-translate-y-2/4 duration-150">
+      <div className="absolute top-2/4 left-2/4 -translate-x-2/4 translate-y-full group-hover:-translate-y-2/4 duration-150 w-full">
         {children}
       </div>
     </div>

@@ -10,6 +10,7 @@ import Admin_Loading from "@/components/ui/Admin_Loading";
 import { fadeLeft, fadeOnly } from "@/Animation";
 import { useAdmin } from "../../../../providers/AdminContext";
 import { useRouter } from "next/navigation";
+import { T } from "gt-next";
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
@@ -50,22 +51,24 @@ export default function Page() {
   return (
     <main className="pt-20 p-6">
       <section className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-3 md:gap-10 mb-8">
-        <motion.h2 {...fadeLeft} className="flex items-center gap-3">
-          <MessageSquare
-            size={50}
-            strokeWidth={3}
-            className="shrink-0 mt-1 text-primary dark:text-primary-foreground"
-          />
-          Contact Messages
-        </motion.h2>
-        <div className="flex items-center gap-3">
-          <Button onClick={FetchData} className="w-2/3 md:w-fit">
-            Refresh
-          </Button>
-          <Button link={"/Admin/dashboard"} variant={"outline"}>
-            Go Back
-          </Button>
-        </div>
+        <T>
+          <motion.h2 {...fadeLeft} className="flex items-center gap-3">
+            <MessageSquare
+              size={50}
+              strokeWidth={3}
+              className="shrink-0 mt-1 text-primary dark:text-primary-foreground"
+            />
+            Contact Messages
+          </motion.h2>
+          <div className="flex items-center gap-3">
+            <Button onClick={FetchData} className="w-2/3 md:w-fit">
+              Refresh
+            </Button>
+            <Button link={"/Admin/dashboard"} variant={"outline"}>
+              Go Back
+            </Button>
+          </div>
+        </T>
       </section>
       <section>
         {data.length >= 1 ? (
@@ -83,10 +86,12 @@ export default function Page() {
           </div>
         ) : (
           <motion.div {...fadeOnly} className="text-center">
-            <h3 className="text-primary dark:text-primary-foreground">
-              There is no messages yet
-            </h3>
-            <p>Try again later</p>
+            <T>
+              <h3 className="text-primary dark:text-primary-foreground">
+                There is no messages yet
+              </h3>
+              <p>Try again later</p>
+            </T>
           </motion.div>
         )}
       </section>

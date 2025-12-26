@@ -10,10 +10,12 @@ import MessageCard from "@/components/ui/MessageCard";
 import Admin_Loading from "@/components/ui/Admin_Loading";
 import { Bug, MailOpen } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { T, useGT } from "gt-next";
 
 export default function Page() {
   const { data: session, isPending } = useSession();
   const router = useRouter();
+  const t = useGT();
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<Contact_Message[] | null>(null);
@@ -53,21 +55,17 @@ export default function Page() {
   return (
     <main className="pt-20">
       <div className="flex flex-col md:flex-row justify-center items-center md:justify-between mb-4 gap-5">
-        <h2 className="text-xl font-semibold">Contact Messages</h2>
-        <div className="flex items-center gap-5">
-          <Button
-            onClick={load}
-            className="px-3 py-1 rounded-md border text-sm"
-          >
-            Refresh
-          </Button>
-          <Button
-            link={"/dashboard"}
-            className="px-3 py-1 rounded-md border text-sm"
-          >
-            Close
-          </Button>
-        </div>
+        <T>
+          <h2 className="text-xl font-semibold">Contact Messages</h2>
+          <div className="flex items-center gap-5">
+            <Button
+              link={"/dashboard"}
+              className="px-3 py-1 rounded-md border text-sm"
+            >
+              Go Back
+            </Button>
+          </div>
+        </T>
       </div>
       <motion.div
         {...fadeUp}
@@ -79,7 +77,7 @@ export default function Page() {
             className="flex flex-col justify-center items-center gap-4 text-xl my-10"
           >
             <div className="w-60 h-60 rounded-full border-r border-l-transparent border-primary dark:border-primary-foreground  animate-spin " />
-            <span className="animate-pulse">Loading…</span>
+            <span className="animate-pulse">{t("Loading…")}</span>
           </motion.div>
         )}
         {error && (
@@ -90,10 +88,12 @@ export default function Page() {
             <div className="p-4 rounded-full border-2 border-red-600 bg-red-500 dark:bg-red-600/70 text-white">
               <Bug size={90} strokeWidth={0.6} />
             </div>
-            <h2>
-              Error <span className="text-red-600">400</span>
-            </h2>
-            <h6>Plz try Again or you can contact us and we will help you</h6>
+            <T>
+              <h2>
+                Error <span className="text-red-600">400</span>
+              </h2>
+              <h6>Plz try Again or you can contact us and we will help you</h6>
+            </T>
             <p>
               <span className="mark"> Error Details </span>: {error}
             </p>
@@ -110,16 +110,18 @@ export default function Page() {
                 <div className="p-4 rounded-full border-2 border-primary/70 bg-primary dark:bg-primary-foreground/70 text-white">
                   <MailOpen size={90} strokeWidth={0.6} />
                 </div>
-                <h4>
-                  No items <span className="mark"> yet </span>.
-                </h4>
-                <p>You can contact Us if you want btw</p>
-                <div className="flex items-center gap-5">
-                  <Button link={"/contact"}>Contact Us</Button>
-                  <Button link={"/dashboard"} variant={"outline"}>
-                    dashboard
-                  </Button>
-                </div>
+                <T>
+                  <h4>
+                    No items <span className="mark"> yet </span>.
+                  </h4>
+                  <p>You can contact Us if you want btw</p>
+                  <div className="flex items-center gap-5">
+                    <Button link={"/contact"}>Contact Us</Button>
+                    <Button link={"/dashboard"} variant={"outline"}>
+                      dashboard
+                    </Button>
+                  </div>
+                </T>
               </motion.div>
             )}
             {data.map((item) => (

@@ -1,6 +1,6 @@
 "use client";
 import { motion, AnimatePresence } from "motion/react";
-import { mainLinks } from "@/data/MainLinks";
+import { useMainLinks } from "@/data/MainLinks";
 import { HeartHandshake } from "lucide-react";
 import TextAnimated from "./ui/TextAnimated";
 import { Button } from "./ui/button";
@@ -8,12 +8,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { fadeOnly, transition } from "@/Animation";
 import { usePathname } from "next/navigation";
+import { T, useGT } from "gt-next";
 
 const Footer = () => {
   const pathName = usePathname();
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
+  const mainLinks = useMainLinks();
+  const t = useGT();
   const handleSubscribe = async (email: string) => {
     if (!email || !email.includes("@"))
       return toast.error("Please enter a valid email", {
@@ -43,20 +45,23 @@ const Footer = () => {
   return (
     <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-5 md:px-10 min-h-96 mb-10 mt-20 max-w-7xl mx-auto">
       <div className="max-w-72 h-full text-start">
-        <h2 className="flex justify-start items-center gap-2">
-          <HeartHandshake
-            size={45}
-            className="text-primary dark:text-primary-foreground"
-          />
-          A7KI
-        </h2>
-        <p>
-          A safe space to share, connect, and lighten your emotional load. Read,
-          relate, and let someone know they're not alone, all in privacy.
-        </p>
+        <T>
+          <h2 className="flex justify-start items-center gap-2">
+            <HeartHandshake
+              size={45}
+              className="text-primary dark:text-primary-foreground"
+            />
+            A7KI
+          </h2>
+          <p>
+            A safe space to share, connect, and lighten your emotional load.
+            Read, relate, and let someone know they're not alone, all in
+            privacy.
+          </p>
+        </T>
       </div>
       <div>
-        <h3>Sitemap</h3>
+        <h3>{t("Sitemap")}</h3>
         <div className="flex flex-col justify-center items-start gap-2">
           {mainLinks.map((item) => (
             <TextAnimated
@@ -70,7 +75,7 @@ const Footer = () => {
         </div>
       </div>
       <div>
-        <h4>Newsletter</h4>
+        <h4>{t("Newsletter")}</h4>
         <div className="flex flex-col justify-center items-start gap-2 w-60">
           <AnimatePresence mode="wait">
             {loading ? (
@@ -95,18 +100,20 @@ const Footer = () => {
                   onClick={() => handleSubscribe(email)}
                   className="w-full"
                 >
-                  Subscribe
+                  {t("Subscribe")}
                 </Button>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       </div>
-      <p className="text-sm! mt-20 col-span-full text-center">
-        &copy; {new Date().getFullYear()}{" "}
-        <span className="text-accent-foreground font-semibold">A7KI</span>. All
-        rights reserved.
-      </p>
+      <T>
+        <p className="text-sm! mt-20 col-span-full text-center">
+          &copy; {new Date().getFullYear()}{" "}
+          <span className="text-accent-foreground font-semibold">A7KI</span>.
+          All rights reserved.
+        </p>
+      </T>{" "}
     </footer>
   );
 };

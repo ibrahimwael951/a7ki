@@ -2,13 +2,17 @@
 import { fadeOnly, fadeUp, transition } from "@/Animation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "./button";
-import { rankConfig } from "@/data/rankConfig";
+import { useRankConfig } from "@/data/rankConfig";
 import { useEffect, useState } from "react";
 import { lenis } from "@/lib/lenis";
 import { BadgeX, CircleCheckBig, X } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 import axios from "axios";
 import { ThoughtFeedback } from "@/types/Thoughts";
+import { T, useGT } from "gt-next";
+import { RankKey } from "@/types/Thoughts_Rank";
+
+
 
 const Thought_Card = ({
   thought,
@@ -25,7 +29,7 @@ const Thought_Card = ({
   userId?: string;
   withUserBTN?: boolean;
   withoutSlice?: boolean;
-  rank: string;
+  rank: RankKey;
   ThoughtFeedback?: ThoughtFeedback[];
   createdAt: string;
 }) => {
@@ -40,6 +44,8 @@ const Thought_Card = ({
   const [feedback, setFeedback] = useState<string>("");
   const [AdminName, setAdminName] = useState<string>(session?.user.name || "");
   const [showFullMessage, setShowFullMessage] = useState<boolean>(withoutSlice);
+  const t = useGT();
+  const rankConfig = useRankConfig();
 
   const config = rankConfig[rank];
   const Icon = config.icon;
@@ -95,7 +101,7 @@ const Thought_Card = ({
                 <>
                   {thought.split(" ").slice(0, 20).join(" ") + "..."}
                   <span className="mark mx-2 border-b border-transparent hover:border-primary  dark:hover:border-primary-foreground">
-                    see more
+                    {t("see more")}
                   </span>
                 </>
               )}
@@ -119,7 +125,9 @@ const Thought_Card = ({
                 className="w-full flex flex-col md:flex-row items-center justify-between gap-2 "
               >
                 <div>
-                  <span className="mark">Admin {item.AdminName} Message : </span>
+                  <span className="mark">
+                    Admin {item.AdminName} Message :{" "}
+                  </span>
                   {item.message}
                 </div>
                 <p className="text-xs">
@@ -151,7 +159,7 @@ const Thought_Card = ({
                   link={`/Admin/users/${userId}`}
                   className="text-xs 2xl:text-sm w-2/4"
                 >
-                  See User Profile
+                  {t("See User Profile")}
                 </Button>
               )}
               <Button
@@ -161,7 +169,7 @@ const Thought_Card = ({
                 } `}
                 onClick={() => setShowFB(true)}
               >
-                Send Feedback
+                {t("Send Feedback")}
               </Button>
             </div>
           </div>
@@ -197,7 +205,7 @@ const Thought_Card = ({
                     className="flex flex-col justify-center items-center gap-5 "
                   >
                     <div className="w-60 h-60 rounded-full border-r border-l-transparent border-primary dark:border-primary-foreground  animate-spin " />
-                    <h4 className="animate-pulse">Loading...</h4>
+                    <h4 className="animate-pulse">{t("Loading...")}</h4>
                   </motion.div>
                 ) : error ? (
                   <motion.div
@@ -207,7 +215,7 @@ const Thought_Card = ({
                     className="flex flex-col justify-center items-center gap-5 text-xl m-5"
                   >
                     <BadgeX size={50} className="text-red-600" />
-                    <h3>Error while submitting</h3>
+                    <h3>{t("Error while submitting")}</h3>
                     <p>
                       <span className="text-red-600">Error : </span> {error}
                     </p>
@@ -220,7 +228,7 @@ const Thought_Card = ({
                     className="flex flex-col justify-center items-center gap-5 text-xl m-5"
                   >
                     <CircleCheckBig size={50} className="text-green-600" />
-                    <h3>Your submited is done</h3>
+                    <h3>{t("Your submited is done")}</h3>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -229,10 +237,11 @@ const Thought_Card = ({
                     {...transition}
                     className="flex flex-col justify-between items-center gap-5"
                   >
-                    <h3 className="font-bold!">Send FeedBack</h3>
+                    <h3 className="font-bold!">{t("Send FeedBack")}</h3>
                     <div className="w-full max-w-xl flex flex-col items-start">
                       <label>
-                        Type your <span className="mark font-bold">Name</span>
+                        {t("Type your")}{" "}
+                        <span className="mark font-bold">{t("Name")}</span>
                       </label>
                       <input
                         type="name"
@@ -242,13 +251,13 @@ const Thought_Card = ({
                         className="w-full max-w-xl p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 disabled:cursor-not-allowed"
                       />
                       <p className="w-full text-center text-xs mark">
-                        Your Admin Name has been took from your session
+                        {t("Your Admin Name has been took from your session")}
                       </p>
                     </div>
                     <div className="w-full max-w-xl flex flex-col items-start">
                       <label>
-                        Type your{" "}
-                        <span className="mark font-bold">feedBack</span>
+                        {t("Type your")}{" "}
+                        <span className="mark font-bold">{t("feedBack")}</span>
                       </label>
                       <textarea
                         name="message"
@@ -259,19 +268,21 @@ const Thought_Card = ({
                       />
                     </div>
                     <div className="flex items-center gap-4">
-                      <Button
-                        onClick={handleSubmit}
-                        className="text-xs sm:text-sm"
-                      >
-                        Send your feedback
-                      </Button>
-                      <Button
-                        variant={"outline"}
-                        onClick={() => setShowFB(false)}
-                        className="text-xs sm:text-sm"
-                      >
-                        Cancel, i don't want to!
-                      </Button>
+                      <T>
+                        <Button
+                          onClick={handleSubmit}
+                          className="text-xs sm:text-sm"
+                        >
+                          Send your feedback
+                        </Button>
+                        <Button
+                          variant={"outline"}
+                          onClick={() => setShowFB(false)}
+                          className="text-xs sm:text-sm"
+                        >
+                          Cancel, i don't want to!
+                        </Button>
+                      </T>
                     </div>
                   </motion.div>
                 )}

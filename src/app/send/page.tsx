@@ -5,20 +5,15 @@ import { useEffect, useState } from "react";
 import { fadeOnly, fadeUp, transition } from "@/Animation";
 import TextType from "@/components/TextType";
 import { Button } from "@/components/ui/button";
-import { Examples } from "@/data/Messages_Examples";
+import { useExamples } from "@/data/Messages_Examples";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "@/lib/auth-client";
-
-const Messages = [
-  "Hi there!",
-  "Here, you can share all your negative thoughts",
-  "And don’t worry, no one will know who you are.",
-  "Lastly, please remember to be respectful to others and to our privacy",
-];
+import { T, useGT } from "gt-next";
 
 export default function Page() {
+  const t = useGT();
   const [message, setMessage] = useState(0);
   const [showForm, setShowForm] = useState<boolean | null>(null);
   const [buttonEnabled, setButtonEnabled] = useState(false);
@@ -27,6 +22,13 @@ export default function Page() {
   const [submitted, setSubmitted] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
   const { data: session, isPending } = useSession();
+  const Examples = useExamples();
+  const Messages = [
+    t("Hi there !"),
+    t("Here, you can share all your negative thoughts"),
+    t("And don’t worry, no one will know who you are."),
+    t("Lastly, please remember to be respectful to others and to our privacy"),
+  ];
 
   const { RiveComponent } = useRive({
     src: "/Animated_Images/Cute_Girl.riv",
@@ -65,8 +67,8 @@ export default function Page() {
     e.preventDefault();
     if (!session) return;
     if (thought.trim().length <= 120)
-      return toast.error("Type more than 120 letters", {
-        description: "you can add more details to your story",
+      return toast.error(t("Type more than 120 letters"), {
+        description: t("you can add more details to your story"),
         position: "bottom-right",
       });
 
@@ -100,7 +102,7 @@ export default function Page() {
           <RiveComponent />
         </div>
         <p className="absolute -bottom-1 left-2/4 -translate-x-1/2 w-full text-center md:hidden text-sm text-gray-500">
-          try Swipe on me
+          {t("Tap the character to interact")}
         </p>
       </motion.div>
       <AnimatePresence mode="wait">
@@ -130,7 +132,7 @@ export default function Page() {
 
               <motion.div variants={fadeUp} transition={transition}>
                 <Button disabled={!buttonEnabled} onClick={btnHandler}>
-                  {message === 0 ? "Hi!" : "Okay, Got it"}
+                  {message === 0 ? t("Hi!") : t("Okay, Got it")}
                 </Button>
               </motion.div>
             </motion.div>
@@ -156,23 +158,27 @@ export default function Page() {
                     onSubmit={handleSubmit}
                     className="w-full space-y-5"
                   >
-                    <motion.h2
-                      variants={fadeUp}
-                      className="text-4xl md:text-5xl font-medium text-center"
-                    >
-                      Share your{" "}
-                      <span className="text-primary dark:text-primary-foreground">
-                        {" "}
-                        thoughts{" "}
-                      </span>
-                    </motion.h2>
+                    <T>
+                      <motion.h2
+                        variants={fadeUp}
+                        className="text-4xl md:text-5xl font-medium text-center"
+                      >
+                        Share your{" "}
+                        <span className="text-primary dark:text-primary-foreground">
+                          {" "}
+                          thoughts{" "}
+                        </span>
+                      </motion.h2>
+                    </T>
 
                     <motion.div variants={fadeUp} className="relative w-full">
                       <textarea
                         value={thought}
                         onChange={(e) => setThought(e.target.value)}
                         maxLength={2000}
-                        placeholder="Write your negative thoughts here... Remember, this is anonymous and safe."
+                        placeholder={t(
+                          "Write your negative thoughts here... Remember, this is anonymous and safe."
+                        )}
                         className="w-full min-h-40 h-fit max-h-[400px] p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 resize-y"
                         disabled={isSubmitting}
                       />
@@ -193,22 +199,24 @@ export default function Page() {
                         {isSubmitting ? (
                           <span className="flex items-center justify-center gap-2">
                             <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                            Sending...
+                            {t("Submitting...")}
                           </span>
                         ) : (
-                          "Submit"
+                          t("Submit")
                         )}
                       </Button>
                     </motion.div>
-                    <p className="text-center">
-                      want examples?{" "}
-                      <span
-                        onClick={() => setShowExamples(true)}
-                        className="text-primary dark:text-primary-foreground border-b border-primary dark:border-primary-foreground cursor-pointer"
-                      >
-                        Examples
-                      </span>
-                    </p>
+                    <T>
+                      <p className="text-center">
+                        want examples?{" "}
+                        <span
+                          onClick={() => setShowExamples(true)}
+                          className="text-primary dark:text-primary-foreground border-b border-primary dark:border-primary-foreground cursor-pointer"
+                        >
+                          Examples
+                        </span>
+                      </p>
+                    </T>
                   </motion.form>
                 ) : (
                   <motion.div
@@ -216,14 +224,16 @@ export default function Page() {
                     {...fadeOnly}
                     className="text-center space-y-4"
                   >
-                    <h2>Thank you for sharing</h2>
-                    <p>Your thoughts have been submitted </p>
-                    <div className="flex justify-center items-center gap-4 mt-5">
-                      <Button link={"/dashboard"} variant={"outline"}>
-                        Dashboard
-                      </Button>
-                      <Button link={"/sendMail"}>Send Mail to me!</Button>
-                    </div>
+                    <T>
+                      <h2>Thank you for sharing</h2>
+                      <p>Your thoughts have been submitted </p>
+                      <div className="flex justify-center items-center gap-4 mt-5">
+                        <Button link={"/dashboard"} variant={"outline"}>
+                          Dashboard
+                        </Button>
+                        <Button link={"/sendMail"}>Contact!</Button>
+                      </div>
+                    </T>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -254,7 +264,7 @@ export default function Page() {
                 <X size={40} />
               </Button>
               <h1 className="mb-4 text-white dark:text-primary-foreground">
-                Examples
+                {t("Examples")}
               </h1>
               <div className="flex flex-col gap-4">
                 {Examples.map((item, i) => (

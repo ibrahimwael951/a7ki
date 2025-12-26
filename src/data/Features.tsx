@@ -1,24 +1,36 @@
+import { useGT } from "gt-next";
 import { Lock, Heart, Users, Smile } from "lucide-react";
 
-export const features = [
-  {
-    label: "Private Messages Until Deadline",
-    description: "All messages users send remain private until the deadline.",
-    icon: Lock,
-  },
-  {
-    label: "Feel Better",
-    description: "Helps you process all bad moments you had and feel better.",
-    icon: Heart,
-  },
-  {
-    label: "Share & Connect",
-    description: "Share your bad moments with others and feel not alone.",
-    icon: Users,
-  },
-  {
-    label: "Learn from Others",
-    description: "Benefit from other people's experiences and feel better yourself.",
-    icon: Smile,
-  },
-];
+export const useFeatures = () => {
+  const t = useGT();
+
+  return [
+    {
+      label: t("Private Messages Until Deadline"),
+      description: t(
+        "All messages users send remain private until the deadline."
+      ),
+      icon: Lock,
+    },
+    {
+      label: t("Feel Better"),
+      description: t(
+        "Helps you process all bad moments you had and feel better."
+      ),
+      icon: Heart,
+    },
+    {
+      label: t("Share & Connect"),
+      description: t("Share your bad moments with others and feel not alone."),
+      icon: Users,
+    },
+    {
+      label: t("Learn from Others"),
+      description: t(
+        "Benefit from other people's experiences and feel better yourself."
+      ),
+      icon: Smile,
+    },
+  ];
+};
+

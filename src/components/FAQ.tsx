@@ -1,16 +1,19 @@
 "use client";
 import { fadeUp, transition } from "@/Animation";
-import { FAQ_Questions } from "@/data/FAQ";
+import { useFAQ_Questions } from "@/data/FAQ";
 import { Forward } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import React, { useState } from "react";
 import SimpleTitle from "./ui/SimpleTitle";
 import { usePathname } from "next/navigation";
+import { T, useGT } from "gt-next";
 
 const FAQ = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const pathname = usePathname();
   const isContactPage = pathname === "/contact" ? true : false;
+  const t = useGT();
+  const FAQ_Questions = useFAQ_Questions();
   return (
     <section
       className={`flex ${
@@ -21,32 +24,34 @@ const FAQ = () => {
     >
       <div className="w-full md:w-2/4 max-w-xl">
         <SimpleTitle
-          title="FAQs"
+          title={t("FAQs")}
           className={`mb-3 ${!isContactPage && "mx-auto"} `}
         />
-        <motion.div
-          variants={fadeUp}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
-          {...transition}
-        >
-          {isContactPage ? (
-            <h3>Frequently Asked Questions</h3>
-          ) : (
-            <h2>Frequently Asked Questions</h2>
-          )}
-        </motion.div>
-        <motion.p
-          variants={fadeUp}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
-          {...transition}
-        >
-          See if we've answered you question already. If not then don't hesitate
-          to get in touch
-        </motion.p>
+        <T>
+          <motion.div
+            variants={fadeUp}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true, amount: 0.2, margin: "-100px" }}
+            {...transition}
+          >
+            {isContactPage ? (
+              <h3>Frequently Asked Questions</h3>
+            ) : (
+              <h2>Frequently Asked Questions</h2>
+            )}
+          </motion.div>
+          <motion.p
+            variants={fadeUp}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true, amount: 0.2, margin: "-100px" }}
+            {...transition}
+          >
+            See if we've answered you question already. If not then don't
+            hesitate to get in touch
+          </motion.p>
+        </T>
       </div>
       <div
         className={`w-full ${

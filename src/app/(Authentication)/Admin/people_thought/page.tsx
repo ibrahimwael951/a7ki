@@ -11,6 +11,7 @@ import Thought_Card from "@/components/ui/Thought_Card";
 import { useAdmin } from "../../../../providers/AdminContext";
 import { useRouter } from "next/navigation";
 import { useIsTablet } from "@/hooks/IsMobile";
+import { T } from "gt-next";
 export default function Page() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -65,22 +66,23 @@ export default function Page() {
   return (
     <main className="mt-20 p-6">
       <section className="flex flex-row justify-between items-center gap-3 md:gap-10 mb-8">
-        <motion.h3
-          {...fadeLeft}
-          className="lg:text-4xl! 2xl:text-5xl! flex items-center gap-3"
-        >
-          <MessageSquare
-            size={isTablet ? 30 : 50}
-            strokeWidth={3}
-            className="shrink-0 mt-1 text-primary dark:text-primary-foreground"
-          />
-          People Thoughts
-        </motion.h3>
-        <div className="flex items-center gap-3">
+        <T>
+          <motion.h3
+            {...fadeLeft}
+            className="lg:text-4xl! 2xl:text-5xl! flex items-center gap-3"
+          >
+            <MessageSquare
+              size={isTablet ? 30 : 50}
+              strokeWidth={3}
+              className="shrink-0 mt-1 text-primary dark:text-primary-foreground"
+            />
+            People Thoughts
+          </motion.h3>
+
           <Button link={"/Admin/dashboard"} variant={"outline"}>
             Go Back
           </Button>
-        </div>
+        </T>
       </section>
       <section>
         {data.length >= 1 ? (

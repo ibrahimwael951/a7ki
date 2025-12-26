@@ -2,34 +2,39 @@
 import { fadeUp, transition } from "@/Animation";
 import SimpleTitle from "./ui/SimpleTitle";
 import { motion } from "motion/react";
-import { features } from "@/data/Features";
+import { useFeatures } from "@/data/Features";
 import Image from "next/image";
+import { T, useGT } from "gt-next";
 
 const MotionImage = motion.create(Image);
 const Features = () => {
+  const t = useGT();
+  const features = useFeatures();
   return (
     <section className="min-h-screen max-w-7xl mx-auto">
-      <SimpleTitle title="Features" whileHover />
+      <SimpleTitle title={t("Features")} whileHover />
       <div className="flex flex-col md:flex-row gap-5 my-3 justify-between items-center">
-        <motion.h1
-          variants={fadeUp}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
-          {...transition}
-        >
-          What Makes A7KI Different
-        </motion.h1>
-        <motion.p
-          variants={fadeUp}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
-          {...transition}
-        >
-          A7KI gives you a private space to speak freely, read others’ stories,
-          and feel supported — all without revealing who you are.
-        </motion.p>
+        <T>
+          <motion.h1
+            variants={fadeUp}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true, amount: 0.2, margin: "-100px" }}
+            {...transition}
+          >
+            What Makes A7KI Different
+          </motion.h1>
+          <motion.p
+            variants={fadeUp}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true, amount: 0.2, margin: "-100px" }}
+            {...transition}
+          >
+            A7KI gives you a private space to speak freely, read others’
+            stories, and feel supported — all without revealing who you are.
+          </motion.p>
+        </T>
       </div>
       <section className="min-h-[70vh] w-full flex flex-col lg:flex-row justify-center items-center gap-10">
         <div className="w-full lg:w-2/4 h-full grid grid-cols-1 md:grid-cols-2 gap-4">

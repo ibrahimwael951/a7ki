@@ -3,24 +3,30 @@ import { motion } from "motion/react";
 import SimpleTitle from "./ui/SimpleTitle";
 import { MessageSquare, Clock, BookOpen } from "lucide-react";
 import { fadeUp } from "@/Animation";
+import { T, useGT } from "gt-next";
 const How_Its_Works = () => {
+  const t = useGT();
+
   const Steps = [
     {
-      title: "Share Your Story",
-      description:
-        "Send your heavy thoughts and difficult moments anonymously. Let it out without judgment.",
+      title: t("Share Your Story"),
+      description: t(
+        "Send your heavy thoughts and difficult moments anonymously. Let it out without judgment."
+      ),
       icon: MessageSquare,
     },
     {
-      title: "Wait for the Deadline",
-      description:
-        "Your story will be reviewed and added before the deadline. Make sure to include your email so we can notify you.",
+      title: t("Wait for the Deadline"),
+      description: t(
+        "Your story will be reviewed and added before the deadline. Make sure to include your email so we can notify you."
+      ),
       icon: Clock,
     },
     {
-      title: "Explore Others’ Stories",
-      description:
-        "Read what others shared, react to their stories, and leave supportive comments.",
+      title: t("Explore Others’ Stories"),
+      description: t(
+        "Read what others shared, react to their stories, and leave supportive comments."
+      ),
       icon: BookOpen,
     },
   ];
@@ -28,23 +34,25 @@ const How_Its_Works = () => {
   return (
     <section className="my-20">
       <div className="flex flex-col justify-center items-center gap-2 text-center max-w-xl m-auto mb-6">
-        <SimpleTitle title="How it works" />
-        <motion.h2
-          variants={fadeUp}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
-        >
-          Three steps to less carbon (and less stress)
-        </motion.h2>
-        <motion.p
-          variants={fadeUp}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
-        >
-          From data to action in less time than it takes to make a coffee.
-        </motion.p>
+        <SimpleTitle title={t("How it works")} />
+        <T>
+          <motion.h2
+            variants={fadeUp}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true, amount: 0.2, margin: "-100px" }}
+          >
+            Three steps to less carbon (and less stress)
+          </motion.h2>
+          <motion.p
+            variants={fadeUp}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true, amount: 0.2, margin: "-100px" }}
+          >
+            From data to action in less time than it takes to make a coffee.
+          </motion.p>
+        </T>
       </div>
       <section className="flex flex-wrap justify-center items-center gap-5">
         {Steps.map((item) => (

@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Button } from "./button";
 import { motion, AnimatePresence } from "motion/react";
 import { fadeOnly, fadeUp, transition } from "@/Animation";
+import { T, useGT } from "gt-next";
 
 dayjs.extend(relativeTime);
 
@@ -23,6 +24,7 @@ const MessageCard = ({
   const [deleted, setDeleted] = useState(false);
   const [warning, setWarning] = useState(false);
   const [loading, setLoading] = useState(false);
+  const t = useGT();
 
   async function DeleteMessage() {
     setLoading(true);
@@ -70,7 +72,7 @@ const MessageCard = ({
           className="flex items-center gap-3 mb-4 cursor-pointer hover:opacity-70 transition-opacity"
         >
           <Mail strokeWidth={3} className="mark w-4 h-4 shrink-0" />
-          <p>{showEmail ? email : <span>Hidden Email</span>}</p>
+          <p>{showEmail ? email : <span>{t("Hidden Email")}</span>}</p>
         </div>
 
         <div className="flex items-start gap-3 mb-4">
@@ -111,7 +113,7 @@ const MessageCard = ({
                   className="w-full h-full flex flex-col justify-center items-center gap-5 text-center"
                 >
                   <div className="w-20 h-20 rounded-full border-r border-l-transparent border-primary dark:border-primary-foreground  animate-spin " />
-                  <h4 className="animate-pulse">Loading...</h4>
+                  <h4 className="animate-pulse">{t("Loading...")}</h4>
                 </motion.div>
               ) : (
                 <motion.div
@@ -119,20 +121,22 @@ const MessageCard = ({
                   id="Not_Loading"
                   className="w-full h-full flex flex-col justify-evenly items-center"
                 >
-                  <h3 className="mark">
-                    Are you sure you want delete this message ?
-                  </h3>
-                  <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-                    <Button variant={"destructive"} onClick={DeleteMessage}>
-                      Yes, delete this message
-                    </Button>
-                    <Button
-                      variant={"outline"}
-                      onClick={() => setWarning(false)}
-                    >
-                      No, Keep the message{" "}
-                    </Button>
-                  </div>
+                  <T>
+                    <h3 className="mark">
+                      Are you sure you want delete this message ?
+                    </h3>
+                    <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+                      <Button variant={"destructive"} onClick={DeleteMessage}>
+                        Yes, delete this message
+                      </Button>
+                      <Button
+                        variant={"outline"}
+                        onClick={() => setWarning(false)}
+                      >
+                        No, Keep the message{" "}
+                      </Button>
+                    </div>
+                  </T>
                 </motion.div>
               )}
             </motion.div>

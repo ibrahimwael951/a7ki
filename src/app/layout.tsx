@@ -7,6 +7,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import { AdminProvider } from "../providers/AdminContext";
+import { GTProvider, useLocale } from "gt-next";
+import Welcome from "@/components/Welcome";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,21 +53,30 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = useLocale();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang={locale === "ar-EG" ? "ar" : "en"}
+      dir={locale === "ar-EG" ? "rtl" : "ltr"}
+      suppressHydrationWarning
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AdminProvider>
-          <LenisProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <Navbar />
-              {children}
-              <Footer />
-              <Toaster richColors closeButton />
-            </ThemeProvider>
-          </LenisProvider>
-        </AdminProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <GTProvider>
+            <AdminProvider>
+              <LenisProvider>
+                <Welcome />
+                <Navbar />
+                {children}
+                <Footer />
+                <Toaster richColors closeButton />
+              </LenisProvider>
+            </AdminProvider>
+          </GTProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

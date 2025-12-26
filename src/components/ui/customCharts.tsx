@@ -16,6 +16,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { DailyMessages } from "@/types/DailyMessages";
+import { useGT } from "gt-next";
 
 export const description = "A simple area chart";
 
@@ -36,6 +37,7 @@ export function ContactMessagesAreaChart({
   messages: DailyMessages[];
 }) {
   const chartData = messages;
+  const t = useGT();
 
   return (
     <Card className="dark:bg-primary">
@@ -77,10 +79,10 @@ export function ContactMessagesAreaChart({
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium">
-              Daily {title} volume <TrendingUp className="h-4 w-4" />
+              {t("Daily volume")} <TrendingUp className="h-4 w-4" />
             </div>
             <div className="text-muted-foreground">
-              Based on actual submission dates
+              {t("Based on actual submission dates")}
             </div>
           </div>
         </div>

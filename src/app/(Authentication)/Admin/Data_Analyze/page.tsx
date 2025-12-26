@@ -5,6 +5,7 @@ import Admin_Loading from "@/components/ui/Admin_Loading";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { T, useGT } from "gt-next";
 
 export default function Page() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function Page() {
     loadingData,
     users,
   } = useAdmin();
+  const t = useGT();
 
   useEffect(() => {
     if (loadingAdmin) return;
@@ -36,25 +38,27 @@ export default function Page() {
   return (
     <main className="py-20">
       <div className="mb-10 flex items-center justify-between gap-4 ">
-        <h1>Analyze Data</h1>
-        <Button link={"/Admin/dashboard"} variant="outline">
-          Go Back
-        </Button>
+        <T>
+          <h1>Analyze Data</h1>
+          <Button link={"/Admin/dashboard"} variant="outline">
+            Go Back
+          </Button>
+        </T>
       </div>
       <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 ">
         <ContactMessagesAreaChart
-          title="Contact Messages "
-          description="Message received per day"
+          title={t("Contact Messages ")}
+          description={t("Message received per day")}
           messages={contactMessages}
         />
         <ContactMessagesAreaChart
-          title="People Thoughts "
-          description="Thought received per day"
+          title={t("People Thoughts ")}
+          description={t("Thought received per day")}
           messages={thoughts}
         />
         <ContactMessagesAreaChart
-          title="Users"
-          description="user joined per day"
+          title={t("Users")}
+          description={t("user joined per day")}
           messages={users}
         />
       </div>

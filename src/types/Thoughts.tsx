@@ -1,3 +1,4 @@
+import { RankKey } from "./Thoughts_Rank";
 
 export type Thought = {
   _id: string;
@@ -5,7 +6,7 @@ export type Thought = {
   thought: string;
   createdAt: string;
   country: string;
-  rank: string;
+  rank: RankKey;
   feedback: ThoughtFeedback[];
 };
 

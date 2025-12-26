@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { mainLinks } from "@/data/MainLinks";
+import { useMainLinks } from "@/data/MainLinks";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { HeartHandshake, UserRound, UserStar } from "lucide-react";
@@ -10,11 +10,14 @@ import TextAnimated from "./ui/TextAnimated";
 import { usePathname } from "next/navigation";
 import { useIsMobile } from "@/hooks/IsMobile";
 import { useAdmin } from "@/providers/AdminContext";
+import { useGT } from "gt-next";
 
 const Navbar = () => {
   const [menu, setMenu] = useState<Boolean>(false);
   const isMobile = useIsMobile();
   const pathname = usePathname();
+  const t = useGT();
+  const mainLinks = useMainLinks();
   const { isAdmin, loadingAdmin } = useAdmin();
   return (
     <>
@@ -66,7 +69,7 @@ const Navbar = () => {
               </Button>
             )}
             {pathname != "/send" && (
-              <Button link={"/send"}>Send Message</Button>
+              <Button link={"/send"}>{t("Send Message")}</Button>
             )}
           </div>
 
@@ -133,14 +136,14 @@ const Navbar = () => {
                 onClick={() => setMenu(false)}
                 className="w-2/4"
               >
-                Dashboard
+                {t("Dashboard")}
               </Button>
               <Button
                 link={"/send"}
                 onClick={() => setMenu(false)}
                 className="w-2/4"
               >
-                Send Message
+                {t("Send Message")}
               </Button>
             </motion.div>
           </motion.div>
