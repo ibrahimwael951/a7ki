@@ -35,7 +35,7 @@ export default function Page() {
           >
             {showId
               ? session?.user.id
-              : t(`${isMobile ? "Tap" : "Click"} to Show your Id `)}
+              : `${isMobile ? t("Tap") : t("Click")} ${t("to Show your Id")} `}
           </span>
         </p>
       </div>
@@ -70,7 +70,7 @@ export default function Page() {
                 <div className="text-start">
                   <div className="font-semibold text-lg">{item.title}</div>
                   <div className="text-sm text-muted-foreground">
-                    {t(`View and manage your ${item.title.toLowerCase()}`)}
+                    {`${t("View and manage your")} ${item.title.toLowerCase()}`}
                   </div>
                 </div>
               </div>

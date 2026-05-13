@@ -25,15 +25,17 @@ const System_Setting = () => {
             <Shirt className="w-8 h-8 text-primary dark:text-primary-foreground" />
           </div>
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 w-full">
-            <T>
-              <div className="text-start">
+            <div className="text-start">
+              <T>
                 <div className="font-semibold text-lg">theme</div>
-                <div className="text-sm text-muted-foreground">
-                  {`${isMobile ? "Tap" : "Click"} to `}
+              </T>
+              <div className="text-sm text-muted-foreground">
+                {`${isMobile ? t("Tap") : t("Click")} to `}
+                <T>
                   change to <span className="mark"> Theme</span>
-                </div>
+                </T>
               </div>
-            </T>
+            </div>
             <div className="w-fit">
               <ThemeSelect />
             </div>

@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title: "A7KI — Anonymous Stories & Emotional Sharing Platform",
     description:
       "Share your thoughts anonymously, read real confessions, and release emotional weight in a safe and private space.",
-    // url: "https://your-domain.com",
+    url: "https://a7ki.vercel.app",
     type: "website",
   },
 };
@@ -67,13 +67,11 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <GTProvider>
             <AdminProvider>
-              <LenisProvider>
-                <Welcome />
-                <Navbar />
-                {children}
-                <Footer />
-                <Toaster richColors closeButton />
-              </LenisProvider>
+              <Welcome />
+              <Navbar />
+              {children}
+              <Footer />
+              <Toaster richColors closeButton />
             </AdminProvider>
           </GTProvider>
         </ThemeProvider>

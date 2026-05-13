@@ -107,13 +107,13 @@ const Footer = () => {
           </AnimatePresence>
         </div>
       </div>
-      <T>
-        <p className="text-sm! mt-20 col-span-full text-center">
-          &copy; {new Date().getFullYear()}{" "}
+      <p className="text-sm! mt-20 col-span-full text-center">
+        &copy; {new Date().getFullYear()}{" "}
+        <T>
           <span className="text-accent-foreground font-semibold">A7KI</span>.
           All rights reserved.
-        </p>
-      </T>{" "}
+        </T>{" "}
+      </p>
     </footer>
   );
 };

@@ -109,14 +109,10 @@ export default function Page() {
           onSubmit={SendMessage}
           className="w-full md:w-3/5 flex flex-col justify-center items-center gap-3 border-2 border-primary/30 dark:border-primary p-10 rounded-lg"
         >
-          <T>
-            <AnimatePresence mode="wait">
-              {submitted ? (
-                <motion.div
-                  id="Submitted"
-                  {...fadeOnly}
-                  className="text-center"
-                >
+          <AnimatePresence mode="wait">
+            {submitted ? (
+              <motion.div id="Submitted" {...fadeOnly} className="text-center">
+                <T>
                   <motion.h3 {...fadeUp} {...transition}>
                     Message Send Successfully
                   </motion.h3>
@@ -134,102 +130,100 @@ export default function Page() {
                     <Button link={"/"}>Home</Button>
                     <Button link={"/send"}>Send Your Message</Button>
                   </motion.div>
-                </motion.div>
-              ) : (
-                <>
-                  <motion.div
-                    {...fadeUp}
-                    transition={{ ...transition, delay: 0.6 }}
-                    id="InputForm"
-                    className="w-full flex flex-col justify-start items-start"
-                  >
-                    <label className="text-primary dark:text-primary-foreground">
-                      Full Name
-                    </label>
-                    <input
-                      disabled={loading}
-                      type="type"
-                      placeholder="Your FullName"
-                      name="fullName"
-                      value={form.name}
-                      onChange={(e) =>
-                        setForm({ ...form, name: e.target.value })
-                      }
-                      className="w-full p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 disabled:cursor-not-allowed"
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    {...fadeUp}
-                    id="InputForm"
-                    transition={{ ...transition, delay: 0.7 }}
-                    className="w-full flex flex-col justify-start items-start"
-                  >
-                    <label className="text-primary dark:text-primary-foreground">
-                      Email
-                    </label>
-                    <input
-                      disabled={loading}
-                      name="email"
-                      type="email"
-                      placeholder="Your@gmail.com"
-                      value={form.email}
-                      onChange={(e) =>
-                        setForm({ ...form, email: e.target.value })
-                      }
-                      className="w-full p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 disabled:cursor-not-allowed"
-                    />
-                  </motion.div>
-                  <motion.div
-                    {...fadeUp}
-                    id="InputForm"
-                    transition={{ ...transition, delay: 0.8 }}
-                    className="w-full flex flex-col justify-start items-start"
-                  >
-                    <label className="text-primary dark:text-primary-foreground">
-                      Message
-                    </label>
-                    <textarea
-                      disabled={loading}
-                      placeholder="Your Message"
-                      name="message"
-                      rows={5}
-                      value={form.message}
-                      onChange={(e) =>
-                        setForm({ ...form, message: e.target.value })
-                      }
-                      className="w-full p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none resize-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 disabled:cursor-not-allowed"
-                    />
-                    <input
-                      type="text"
-                      name="company"
-                      className="hidden"
-                      value={form.company}
-                      onChange={(e) =>
-                        setForm({ ...form, company: e.target.value })
-                      }
-                      autoComplete="off"
-                    />
-                  </motion.div>
-                  <Button
+                </T>
+              </motion.div>
+            ) : (
+              <>
+                <motion.div
+                  {...fadeUp}
+                  transition={{ ...transition, delay: 0.6 }}
+                  id="InputForm"
+                  className="w-full flex flex-col justify-start items-start"
+                >
+                  <label className="text-primary dark:text-primary-foreground">
+                    <T>Full Name</T>
+                  </label>
+                  <input
                     disabled={loading}
-                    textAnimated={loading ? false : true}
-                    type="submit"
-                    className="w-full text-primary-foreground flex flex-row items-center gap-2"
-                  >
-                    {loading ? (
-                      <>
-                        <div className="w-5 h-5 rounded-full border border-white border-t-transparent animate-spin" />
-                        Sending
-                      </>
-                    ) : (
-                      "Send Message"
-                    )}
-                  </Button>
-                </>
-              )}
-            </AnimatePresence>
-          </T>
+                    type="type"
+                    placeholder="Your FullName"
+                    name="fullName"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    className="w-full p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 disabled:cursor-not-allowed"
+                  />
+                </motion.div>
+
+                <motion.div
+                  {...fadeUp}
+                  id="InputForm"
+                  transition={{ ...transition, delay: 0.7 }}
+                  className="w-full flex flex-col justify-start items-start"
+                >
+                  <label className="text-primary dark:text-primary-foreground">
+                    <T>Email</T>
+                  </label>
+                  <input
+                    disabled={loading}
+                    name="email"
+                    type="email"
+                    placeholder="Your@gmail.com"
+                    value={form.email}
+                    onChange={(e) =>
+                      setForm({ ...form, email: e.target.value })
+                    }
+                    className="w-full p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 disabled:cursor-not-allowed"
+                  />
+                </motion.div>
+                <motion.div
+                  {...fadeUp}
+                  id="InputForm"
+                  transition={{ ...transition, delay: 0.8 }}
+                  className="w-full flex flex-col justify-start items-start"
+                >
+                  <label className="text-primary dark:text-primary-foreground">
+                    <T>Message</T>
+                  </label>
+                  <textarea
+                    disabled={loading}
+                    placeholder="Your Message"
+                    name="message"
+                    rows={5}
+                    value={form.message}
+                    onChange={(e) =>
+                      setForm({ ...form, message: e.target.value })
+                    }
+                    className="w-full p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none resize-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 disabled:cursor-not-allowed"
+                  />
+                  <input
+                    type="text"
+                    name="company"
+                    className="hidden"
+                    value={form.company}
+                    onChange={(e) =>
+                      setForm({ ...form, company: e.target.value })
+                    }
+                    autoComplete="off"
+                  />
+                </motion.div>
+                <Button
+                  disabled={loading}
+                  textAnimated={loading ? false : true}
+                  type="submit"
+                  className="w-full text-primary-foreground flex flex-row items-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-5 h-5 rounded-full border border-white border-t-transparent animate-spin" />
+                      <T>Sending</T>
+                    </>
+                  ) : (
+                    <T>Send Message</T>
+                  )}
+                </Button>
+              </>
+            )}
+          </AnimatePresence>
         </form>
       </section>
       <FAQ />

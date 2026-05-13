@@ -27,20 +27,24 @@ const FAQ = () => {
           title={t("FAQs")}
           className={`mb-3 ${!isContactPage && "mx-auto"} `}
         />
-        <T>
-          <motion.div
-            variants={fadeUp}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true, amount: 0.2, margin: "-100px" }}
-            {...transition}
-          >
-            {isContactPage ? (
+        <motion.div
+          variants={fadeUp}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true, amount: 0.2, margin: "-100px" }}
+          {...transition}
+        >
+          {isContactPage ? (
+            <T>
               <h3>Frequently Asked Questions</h3>
-            ) : (
+            </T>
+          ) : (
+            <T>
               <h2>Frequently Asked Questions</h2>
-            )}
-          </motion.div>
+            </T>
+          )}
+        </motion.div>
+        <T>
           <motion.p
             variants={fadeUp}
             initial="initial"
@@ -70,7 +74,7 @@ const FAQ = () => {
               setOpenFaq(
                 openFaq === FAQ_Questions.indexOf(item)
                   ? null
-                  : FAQ_Questions.indexOf(item)
+                  : FAQ_Questions.indexOf(item),
               )
             }
             className={`${
