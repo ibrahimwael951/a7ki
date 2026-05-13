@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "./button";
 import { useRankConfig } from "@/data/rankConfig";
 import { useEffect, useState } from "react";
-import { lenis } from "@/lib/lenis";
 import { BadgeX, CircleCheckBig, X, Trash2, Edit } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 import axios from "axios";
@@ -40,7 +39,7 @@ const Thought_Card = ({
   const [showFeedbackPopup, setShowFeedbackPopup] = useState<boolean>(false);
   const [showSendFB, setShowSendFB] = useState<boolean>(false);
   const [FeedBack, setFeedBack] = useState<ThoughtFeedback[]>(
-    ThoughtFeedback || []
+    ThoughtFeedback || [],
   );
 
   // Send feedback states
@@ -52,7 +51,7 @@ const Thought_Card = ({
 
   // Edit feedback states
   const [editingFeedbackId, setEditingFeedbackId] = useState<string | null>(
-    null
+    null,
   );
   const [editFeedbackText, setEditFeedbackText] = useState<string>("");
   const [editLoading, setEditLoading] = useState<boolean>(false);
@@ -60,7 +59,7 @@ const Thought_Card = ({
   // Delete confirmation popup
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
   const [deletingFeedbackId, setDeletingFeedbackId] = useState<string | null>(
-    null
+    null,
   );
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
@@ -87,7 +86,7 @@ const Thought_Card = ({
           message: feedback,
           AdminName,
           thoughtId,
-        }
+        },
       );
       setSubmitted(true);
       setFeedBack((prev) => [response.data, ...prev]);
@@ -141,10 +140,10 @@ const Thought_Card = ({
         {
           feedbackId,
           message: editFeedbackText,
-        }
+        },
       );
       setFeedBack((prev) =>
-        prev.map((fb) => (fb._id === feedbackId ? response.data : fb))
+        prev.map((fb) => (fb._id === feedbackId ? response.data : fb)),
       );
       setEditingFeedbackId(null);
       setEditFeedbackText("");
@@ -181,27 +180,17 @@ const Thought_Card = ({
   };
 
   useEffect(() => {
-    if (!lenis) return;
-
     if (
       showSendFB ||
       showFeedbackPopup ||
       showEditThought ||
       showDeleteConfirm
     ) {
-      lenis.stop();
       window.document.body.style.overflow = "hidden";
     } else {
-      lenis.start();
       window.document.body.style.overflow = "auto";
     }
-  }, [
-    showSendFB,
-    showFeedbackPopup,
-    showEditThought,
-    showDeleteConfirm,
-    lenis,
-  ]);
+  }, [showSendFB, showFeedbackPopup, showEditThought, showDeleteConfirm]);
 
   return (
     <>
@@ -421,7 +410,7 @@ const Thought_Card = ({
                 <h3 className="font-bold text-xl">{t("Delete Feedback")}</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   {t(
-                    "Are you sure you want to delete this feedback? This action cannot be undone."
+                    "Are you sure you want to delete this feedback? This action cannot be undone.",
                   )}
                 </p>
                 <div className="flex items-center gap-3 w-full mt-2">
