@@ -97,7 +97,7 @@ const Welcome = () => {
                   </T>
                   <div className="flex items-center gap-3">
                     <ThemeSelect />
-                    <Button onClick={handleFinish}>Start</Button>
+                    <Button onClick={() => setStep(3)}>Next</Button>
                   </div>
                 </motion.div>
               )}
@@ -120,7 +120,7 @@ const Welcome = () => {
                     </p>
                   </T>
                   <div className="flex justify-center items-center gap-3 mt-5">
-                    <Button onClick={() => setStep(1)}>I understand</Button>
+                    <Button onClick={handleFinish}>I understand</Button>
                   </div>
                 </motion.div>
               )}
