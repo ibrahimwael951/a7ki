@@ -8,6 +8,7 @@ import { Toaster } from "sonner";
 import { AdminProvider } from "../providers/AdminContext";
 import { GTProvider, useLocale } from "gt-next";
 import Welcome from "@/components/Welcome";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -63,6 +64,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+          <NextTopLoader
+            color="#b97375"
+            height={3}
+            showSpinner={false}
+          />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <GTProvider>
             <AdminProvider>

@@ -15,6 +15,9 @@ export default function RootLayout({
     if (!session) {
       router.push("/");
     }
+    if (session?.user.role == "admin") {
+      router.push("/Admin/dashboard");
+    }
   }, [session, isPending]);
   return children;
 }

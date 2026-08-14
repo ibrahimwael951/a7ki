@@ -3,6 +3,7 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
 import { MongoClient } from "mongodb";
 import { anonymous } from "better-auth/plugins";
+import { admin } from "better-auth/plugins";
 
 const client = new MongoClient(process.env.MONGODB_URI as string);
 const db = client.db();
@@ -23,5 +24,16 @@ export const auth = betterAuth({
         return `guest-${id}@A7KI.com`;
       },
     }),
+    admin(),
   ],
+
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        input: false,
+        defaultValue: "user",
+      },
+    },
+  },
 });

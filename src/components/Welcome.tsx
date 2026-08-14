@@ -15,7 +15,7 @@ const textVariants = {
 const Welcome = () => {
   const [showWelcome, setShowWelcome] = useState(false);
   const { data: session } = useSession();
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<1 | 2>(1);
 
   const oldUser =
     typeof window !== "undefined" ? localStorage.getItem("oldUser") : null;
@@ -97,30 +97,7 @@ const Welcome = () => {
                   </T>
                   <div className="flex items-center gap-3">
                     <ThemeSelect />
-                    <Button onClick={() => setStep(3)}>Next</Button>
-                  </div>
-                </motion.div>
-              )}
-              {step === 3 && (
-                <motion.div
-                  key="step-0"
-                  variants={textVariants}
-                  initial="initial"
-                  animate="animate"
-                >
-                  <T>
-                    <h2>Welcome to A7KI!</h2>
-                    <p>
-                      The anonymous stories platform. Get started by choosing
-                      your language.
-                    </p>
-                    <p className="text-red-500!">
-                      Note: Our database is currently not available, so you
-                      won't able to log in or send any messages.
-                    </p>
-                  </T>
-                  <div className="flex justify-center items-center gap-3 mt-5">
-                    <Button onClick={handleFinish}>I understand</Button>
+                    <Button onClick={handleFinish}>Next</Button>
                   </div>
                 </motion.div>
               )}

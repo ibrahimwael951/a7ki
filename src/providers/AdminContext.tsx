@@ -41,21 +41,17 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<DailyMessages[]>([]);
   const [loadingData, setLoadingData] = useState(true);
 
-  const checkAdmin = async () => {
-    try {
-      await axios.post("/api/Admin", {
-        userId: session!.user.id,
-      });
+  const checkAdmin = () => {
+    if (session?.user.role === "admin") {
       setIsAdmin(true);
+      setLoadingAdmin(false);
       return true;
-    } catch {
+    } else {
+      setLoadingAdmin(false);
       setIsAdmin(false);
       return false;
-    } finally {
-      setLoadingAdmin(false);
     }
   };
-
   const fetchAdminData = async () => {
     try {
       setLoadingData(true);
