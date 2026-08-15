@@ -25,7 +25,7 @@ const Navbar = () => {
         initial={{ y: "-100%" }}
         animate={{
           y: 0,
-          height: isMobile ? (menu ? "325px" : "fit-content") : "fit-content",
+          height: isMobile ? (menu ? "290px" : "fit-content") : "fit-content",
         }}
         {...transition}
         whileHover="Show"
@@ -67,9 +67,6 @@ const Navbar = () => {
               <Button link={"/dashboard"}>
                 <UserRound />
               </Button>
-            )}
-            {pathname != "/send" && (
-              <Button link={"/send"}>{t("Send Message")}</Button>
             )}
           </div>
 
@@ -127,23 +124,16 @@ const Navbar = () => {
             </div>
             <motion.div
               {...fadeDown}
-              transition={{ ...transition, delay: 0.3 }}
+              transition={{ ...transition, delay: 0.01 }}
               className="mb-3 flex justify-center items-center gap-2 px-4"
             >
               <Button
                 link={isAdmin ? "/Admin/dashboard" : "/dashboard"}
                 variant={"outline"}
                 onClick={() => setMenu(false)}
-                className="w-2/4"
+                className="w-full"
               >
                 {t("Dashboard")}
-              </Button>
-              <Button
-                link={"/send"}
-                onClick={() => setMenu(false)}
-                className="w-2/4"
-              >
-                {t("Send Message")}
               </Button>
             </motion.div>
           </motion.div>

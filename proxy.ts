@@ -17,7 +17,7 @@ export async function proxy(request: NextRequest) {
   const isAdmin = session.user?.role === "admin";
 
   if (!isAdmin) {
-    return NextResponse.redirect(new URL("/Admin", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
   
   if (isAdmin) {

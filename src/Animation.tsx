@@ -1,5 +1,5 @@
 export const transition = {
-  transition: { duration: 0.5},
+  transition: { duration: 0.23 },
 };
 
 export const fadeUp = {

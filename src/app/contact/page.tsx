@@ -42,10 +42,7 @@ export default function Page() {
     setLoading(true);
     try {
       if (!session) {
-        await authClient.signIn.anonymous();
-      }
-      if (!session) {
-        return toast.error(t("Failed to send message, try again"));
+        return toast.error(t("No anonymous user found. Clear web cache and try again"));
       }
       await axios.post("/api/contact", { userId: session?.user.id, ...form });
       setSubmitted(true);

@@ -26,6 +26,7 @@ export default function AdminPanel() {
       router.push("/Admin/dashboard");
     }
   }, [isAdmin, loadingAdmin, router]);
+  
   if (isPending || isRefetching) return <Admin_Loading />;
   return (
     <main className="flex items-center justify-center p-6">

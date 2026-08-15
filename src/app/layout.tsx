@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import { AdminProvider } from "../providers/AdminContext";
 import { GTProvider, useLocale } from "gt-next";
@@ -75,8 +74,7 @@ export default function RootLayout({
               <Welcome />
               <Navbar />
               {children}
-              <Footer />
-              <Toaster richColors closeButton />
+               <Toaster richColors closeButton />
             </AdminProvider>
           </GTProvider>
         </ThemeProvider>

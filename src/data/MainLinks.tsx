@@ -5,8 +5,8 @@ export const useMainLinks = () => {
 
   return [
     { href: "/", label: t("Home") },
-    { href: "/about", label: t("About") },
-    { href: "/moments", label: t("Moments") },
-    { href: "/contact", label: t("Contact") },
+    // { href: "/about", label: t("About") },
+    { href: "/moments", label: t("People Moments") },
+    { href: "/contact", label: t("Contact Us") },
   ];
 };
