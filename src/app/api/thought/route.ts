@@ -2,6 +2,80 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongoDB";
 import { Thought } from "@/models/Thought";
 import axios from "axios";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+
+// Shared helper so POST and PUT don't duplicate the same AI call/parsing logic.
+async function classifyThought(thought: string): Promise<{
+  rank: string;
+  comment: string;
+  wantEdit: string;
+}> {
+  const response = await axios.post(
+    `${process.env.AI_API}/responses`,
+    {
+      model: process.env.AI_MODEL,
+      input: `You are a content moderation classifier.
+Analyze the following message and determine whether it contains sexual content.
+
+Respond with STRICT JSON only, no markdown, no code fences, no extra text.
+The JSON must have exactly this shape:
+{"rank": "<one of: bad | kinda bad | okay | good | Unknown>", "comment": "<a short, warm, human comment about the thought itself>, "wantEdit": "<type why the story want to be edit>"}
+
+Rank guidance (based on your confidence the message is sexual):
+- "bad" → 100% certain the message is sexual
+- "kinda bad" → ~70% sure the message is sexual
+- "okay" → ~50% unsure or neutral
+- "good" → ~20% sure or confident it is NOT sexual
+- "unknown" → cannot determine confidently
+
+Comment guidance:
+- If the story is a single spam-like word or gibberish, rank should be "bad" and the comment can note that briefly.
+- If the story is sad or difficult, respond with something empathetic and more humans , talk like u are human and u wanna make your friend get better in short way like (im very sorry about what happened to you)
+- If the story is funny or lighthearted, respond warmly like you are talking with a friend not like AI MODEL
+- the story must be normal and not code or binnary system code or any other way , must be one thing a normal text with a clear story about user life or moment
+- Keep the comment short — one sentence.
+- replay with the language of the input story, if possible.
+- and if it want to edit make it an empty string 
+
+wantEdit guidance: 
+- if the story isn't that understandable , ( im soo sad and i wanna die , i had a bad day today and i wasn't that happy ) 
+- if the story like a spam or copied story and no one would care about 
+- and if its bad too 
+- if the story no need to edit , just make it an empty string 
+
+Message to analyze:
+${thought}`,
+      max_output_tokens: 9000,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.AI_KEY}`,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  const messageBlock = response.data.output.find(
+    (item: any) => item.type === "message",
+  );
+  const rawText: string = messageBlock?.content?.[0]?.text ?? "";
+
+  try {
+    // Strip any accidental code fences before parsing, just in case
+    const cleaned = rawText.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+
+    return {
+      rank: parsed.rank ?? "Unknown",
+      comment: parsed.comment ?? "",
+      wantEdit: parsed.wantEdit ?? "",
+    };
+  } catch {
+    // If the model didn't return valid JSON, fail safe instead of crashing
+    return { rank: "Unknown", comment: "", wantEdit: "" };
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -10,9 +84,12 @@ export async function POST(req: Request) {
       req.headers.get("x-real-ip") ||
       "Unknown";
     const body = await req.json();
-    const { thought, userId } = body;
+    const { thought } = body;
 
-    if (!userId) return NextResponse.json("Bad Credential", { status: 400 });
+    const session = await auth.api.getSession({ headers: await headers() });
+
+    if (!session?.user.id)
+      return NextResponse.json("Bad Credential", { status: 400 });
     if (!thought)
       return NextResponse.json("you should Type your Story", { status: 400 });
 
@@ -23,7 +100,7 @@ export async function POST(req: Request) {
     if (ip !== "Unknown") {
       try {
         const res = await fetch(
-          `${process.env.IP_LOCATION_LINK}${ip}?token=${process.env.IP_LOCATION_TOKEN}`
+          `${process.env.IP_LOCATION_LINK}${ip}?token=${process.env.IP_LOCATION_TOKEN}`,
         );
         const data = await res.json();
         country = `${data.continent || "Unknown continent"}, ${
@@ -36,66 +113,41 @@ export async function POST(req: Request) {
       }
     }
 
-    let rank = null;
+    let rank = "Unknown";
+    let comment = "";
+    let wantEdit = "";
+
     try {
-      const response = await axios.post(
-        `${process.env.AI_API}/responses`,
-        {
-          model: process.env.AI_MODEL,
-          input: `You are a content moderation classifier.
-  Analyze the following message and determine whether it contains sexual content.
-
-  Respond with ONE word only, based on your confidence level:
-
-  bad → if you are 100% certain the message is sexual
-
-  kinda bad → if you are ~70% sure the message is sexual
-
-  okay → if you are ~50% unsure or neutral
-
-  good → if you are ~20% sure or confident it is not sexual
-
-  Unknown → if you cannot determine confidently
-
-  Do not explain your reasoning.
-  Do not add punctuation.
-  Do not add extra text.
-
-Message to analyze:
-${thought}`,
-          max_output_tokens: 9000,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.AI_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const messageBlock = response.data.output.find(
-        (item: any) => item.type === "message"
-      );
-      rank = messageBlock?.content?.[0]?.text ?? "Unknown";
+      const result = await classifyThought(thought);
+      rank = result.rank;
+      comment = result.comment;
+      wantEdit = result.wantEdit;
     } catch (err) {
       return NextResponse.json("Failed to fetch AI Response", {
         status: 400,
       });
     }
 
-    await Thought.create({
-      userId,
+    const CreatedThought = await Thought.create({
+      userId: session?.user.id,
       thought,
       country,
-      rank,
+      rank, // only the rank is persisted
     });
 
-    return NextResponse.json("Created Successfully", {
-      status: 200,
-    });
+    return NextResponse.json(
+      {
+        message: "Created Successfully",
+        comment,
+        wantEdit,
+        thoughtId: CreatedThought._id,
+      }, // comment goes back to the client, not the DB
+      { status: 200 },
+    );
   } catch (err) {
     return NextResponse.json(
       { error: "Internal Server Error", details: (err as Error).message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -142,7 +194,7 @@ export async function GET(req: Request) {
   } catch (err) {
     return NextResponse.json(
       { error: "Internal Server Error", details: (err as Error).message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -150,7 +202,13 @@ export async function GET(req: Request) {
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
+    const session = await auth.api.getSession({ headers: await headers() });
+
     const { message, thoughtId } = body;
+
+    if (!session) {
+      return NextResponse.json("Bad Credential", { status: 400 });
+    }
 
     if (!thoughtId) {
       return NextResponse.json("thought ID Not Found", { status: 401 });
@@ -158,70 +216,51 @@ export async function PUT(req: Request) {
     if (!message) {
       return NextResponse.json(
         { error: "Message is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     await connectDB();
 
-    let rank = null;
+    let rank = "Unknown";
+    let comment = "";
+    let wantEdit = "";
     try {
-      const response = await axios.post(
-        `${process.env.AI_API}/responses`,
-        {
-          model: process.env.AI_MODEL,
-          input: `You are a content moderation classifier.
-                Analyze the following message and determine whether it contains sexual content.
-
-                Respond with ONE word only, based on your confidence level:
-
-                bad → if you are 100% certain the message is sexual
-
-                kinda bad → if you are ~70% sure the message is sexual
-
-                okay → if you are ~50% unsure or neutral
-
-                good → if you are ~20% sure or confident it is not sexual
-
-                Unknown → if you cannot determine confidently
-
-                Do not explain your reasoning.
-                Do not add punctuation.
-                Do not add extra text.
-
-              Message to analyze:
-              ${message}`,
-          max_output_tokens: 9000,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.AI_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const messageBlock = response.data.output.find(
-        (item: any) => item.type === "message"
-      );
-      rank = messageBlock?.content?.[0]?.text ?? "Unknown";
+      const result = await classifyThought(message);
+      rank = result.rank;
+      comment = result.comment;
+      wantEdit = result.wantEdit;
     } catch (err) {
       return NextResponse.json("Failed to fetch AI Response", {
         status: 400,
       });
     }
 
-    const thought = await Thought.findByIdAndUpdate(thoughtId, {
-      thought: message,
-      rank,
-    });
+    const thought = await Thought.findOne({ _id: thoughtId });
+    if (thought.userId != session.user.id) {
+      return NextResponse.json("thought isn't yours", { status: 400 });
+    }
+
+    const updatedThought = await Thought.findByIdAndUpdate(
+      thoughtId,
+      {
+        thought: message,
+        rank,
+      },
+      { new: true },
+    );
 
     if (!thought) {
       return NextResponse.json({ error: "Thought not found" }, { status: 404 });
     }
-    return NextResponse.json(thought, { status: 200 });
+
+    return NextResponse.json(
+      { updatedThought, thoughtId, comment, wantEdit },
+      { status: 200 },
+    );
   } catch (err) {
     return NextResponse.json(
       { error: "Internal Server Error", details: (err as Error).message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

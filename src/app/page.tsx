@@ -1,7 +1,8 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
 import { useRive } from "@rive-app/react-canvas";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { fadeOnly, fadeUp, transition } from "@/Animation";
 import TextType from "@/components/TextType";
 import { Button } from "@/components/ui/button";
@@ -10,23 +11,32 @@ import { X } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "@/lib/auth-client";
-import { T, useGT } from "gt-next";
+import { T, useGT, Var } from "gt-next";
 
 export default function Page() {
   const t = useGT();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [message, setMessage] = useState(0);
   const [showForm, setShowForm] = useState<boolean | null>(null);
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [thought, setThought] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [showExamples, setShowExamples] = useState(false);
+  const [ai_Comment, setAi_Comment] = useState("");
+  const [wantEdit, setWantEdit] = useState("");
+  const [thought_id, setThought_id] = useState("");
   const { data: session, isPending } = useSession();
   const Examples = useExamples();
+
+  const showExamples = searchParams.get("examples") === "true";
+
   const Messages = [
     t("Hi there !"),
     t("Here, you can share all your negative thoughts"),
-    t("And don’t worry, no one will know who you are."),
+    t("And don't worry, no one will know who you are."),
     t("Lastly, please remember to be respectful to others and to our privacy"),
   ];
 
@@ -36,6 +46,33 @@ export default function Page() {
     autoplay: true,
   });
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const storedThought = localStorage.getItem("User_Thought");
+
+    if (storedThought) {
+      setThought(storedThought);
+    }
+  }, []);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto";
+        textareaRef.current.style.height = `${Math.min(
+          textareaRef.current.scrollHeight + 20,
+          700,
+        )}px`;
+      }
+    });
+  }, [thought]);
+
+  const ThoughtHandler = (value: string) => {
+    setThought(value);
+    localStorage.setItem("User_Thought", value);
+  };
+
   useEffect(() => {
     const value = localStorage.getItem("know_the_roles");
     if (value) {
@@ -44,6 +81,7 @@ export default function Page() {
       setShowForm(false);
     }
   }, []);
+
   useEffect(() => {
     if (showExamples) {
       window.document.body.style.overflow = "hidden";
@@ -75,19 +113,53 @@ export default function Page() {
     setIsSubmitting(true);
 
     await new Promise((resolve) => setTimeout(resolve, 1500));
+
     try {
-      await axios.post("/api/thought", {
-        thought,
-        userId: session.user.id,
-      });
+      let response;
+
+      if (thought_id !== "") {
+        response = await axios.put("/api/thought", {
+          thoughtId: thought_id,
+          message: thought,
+        });
+      } else {
+        response = await axios.post("/api/thought", {
+          thought,
+          userId: session.user.id,
+        });
+      }
 
       setSubmitted(true);
+
+      if (response.data.wantEdit != "") {
+        setWantEdit(response.data.wantEdit);
+        setThought_id(response.data.thoughtId);
+        setAi_Comment(response.data.comment);
+      } else {
+        setAi_Comment(response.data.comment);
+        setThought("");
+        setThought_id("");
+        setWantEdit("");
+        localStorage.removeItem("User_Thought");
+      }
     } catch (error: any) {
-      return toast.error(error.response.data.error || "Unknown Error", {
+      return toast.error(error.response?.data?.error || "Unknown Error", {
         position: "bottom-right",
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const openExamples = () => {
+    router.push(`${pathname}?examples=true`);
+  };
+
+  const closeExamples = () => {
+    if (window.history.state?.examplesOpened) {
+      router.back();
+    } else {
+      router.push(pathname);
     }
   };
 
@@ -96,14 +168,11 @@ export default function Page() {
       <motion.div
         variants={fadeUp}
         transition={{ ...transition, delay: 0.2 }}
-        className="relative min-h-80 w-full flex justify-end items-end overflow-hidden"
+        className="relative min-h-80 w-full overflow-hidden"
       >
-        <div className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px]">
+        <div className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-[900] lg:w-[700] h-[900] lg:h-[700]">
           <RiveComponent />
         </div>
-        <p className="absolute -bottom-1 left-2/4 -translate-x-1/2 w-full text-center md:hidden text-sm text-gray-500">
-          {t("Swipe Over the character to interact")}
-        </p>
       </motion.div>
       <AnimatePresence mode="wait">
         {!showForm ? (
@@ -152,9 +221,8 @@ export default function Page() {
             >
               <AnimatePresence mode="wait">
                 {!submitted ? (
-                  <motion.form
+                  <form
                     key="form-content"
-                    {...fadeOnly}
                     onSubmit={handleSubmit}
                     className="w-full space-y-5"
                   >
@@ -171,15 +239,21 @@ export default function Page() {
                       </motion.h2>
                     </T>
 
-                    <motion.div variants={fadeUp} className="relative w-full">
+                    <motion.div
+                      {...fadeUp}
+                      {...transition}
+                      className="relative w-full"
+                    >
                       <textarea
+                        ref={textareaRef}
+                        dir="auto"
                         value={thought}
-                        onChange={(e) => setThought(e.target.value)}
+                        onChange={(e) => ThoughtHandler(e.target.value)}
                         maxLength={2000}
                         placeholder={t(
-                          "Write your negative thoughts here... Remember, this is anonymous and safe."
+                          "Write your negative thoughts here... Remember, this is anonymous and safe.",
                         )}
-                        className="w-full min-h-40 h-fit max-h-[400px] p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 resize-y"
+                        className="w-full min-h-40 max-h-[700px] p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 resize-none overflow-y-auto"
                         disabled={isSubmitting}
                       />
                       <p className="absolute bottom-3 right-4">
@@ -188,7 +262,8 @@ export default function Page() {
                     </motion.div>
 
                     <motion.div
-                      variants={fadeUp}
+                      {...fadeUp}
+                      {...transition}
                       className="flex justify-center"
                     >
                       <Button
@@ -210,14 +285,44 @@ export default function Page() {
                       <p className="text-center">
                         Want examples?{" "}
                         <span
-                          onClick={() => setShowExamples(true)}
+                          onClick={openExamples}
                           className="text-primary dark:text-primary-foreground border-b border-primary dark:border-primary-foreground cursor-pointer"
                         >
                           Examples
                         </span>
                       </p>
                     </T>
-                  </motion.form>
+                  </form>
+                ) : wantEdit == "" ? (
+                  <motion.div
+                    key="success"
+                    {...fadeOnly}
+                    className="text-center space-y-4"
+                  >
+                    <T>
+                      <Var>
+                        <h4 className="whitespace-pre-wrap">{ai_Comment}</h4>
+                      </Var>
+
+                      <div className="flex flex-col justify-center items-center gap-4 mt-5">
+                        <Button
+                          className="w-full"
+                          size={"lg"}
+                          link={"/moments"}
+                        >
+                          See People Moments!
+                        </Button>
+                        <Button
+                          className="w-full"
+                          size={"lg"}
+                          link={"/dashboard/Thoughts"}
+                          variant={"outline"}
+                        >
+                          See My Thoughts
+                        </Button>
+                      </div>
+                    </T>
+                  </motion.div>
                 ) : (
                   <motion.div
                     key="success"
@@ -225,13 +330,20 @@ export default function Page() {
                     className="text-center space-y-4"
                   >
                     <T>
-                      <h2>Thank you for sharing</h2>
-                      <p>Your thoughts have been submitted </p>
-                      <div className="flex justify-center items-center gap-4 mt-5">
-                        <Button link={"/dashboard"} variant={"outline"}>
-                          Dashboard
+                      <Var>
+                        <h4 className="whitespace-pre-wrap">{wantEdit}</h4>
+                      </Var>
+
+                      <div className="flex flex-col justify-center items-center gap-4 mt-5">
+                        <Button
+                          className="w-full"
+                          size={"lg"}
+                          onClick={() => {
+                            (setSubmitted(false), setShowForm(true));
+                          }}
+                        >
+                          Edit My Thought
                         </Button>
-                        <Button link={"/contact"}>Contact!</Button>
                       </div>
                     </T>
                   </motion.div>
@@ -247,7 +359,7 @@ export default function Page() {
           <>
             <motion.div
               {...fadeOnly}
-              onClick={() => setShowExamples(false)}
+              onClick={closeExamples}
               className="hidden md:flex fixed top-0 right-0 bg-black/30 backdrop-blur-xs w-full h-full z-30"
             />
             <motion.div
@@ -257,10 +369,7 @@ export default function Page() {
               transition={{ duration: 0.4, stiffness: 10 }}
               className="fixed top-0 right-0 bg-accent text-white w-full md:w-4/5 lg:w-3/5 p-10 pt-20 md:rounded-l-2xl h-full z-40"
             >
-              <Button
-                onClick={() => setShowExamples(false)}
-                className="scale-110 mb-3"
-              >
+              <Button onClick={closeExamples} className="scale-110 mb-3">
                 <X size={40} />
               </Button>
               <h1 className="mb-4 text-white dark:text-primary-foreground">
@@ -273,7 +382,7 @@ export default function Page() {
                     className="flex justify-start items-start md:items-end gap-2"
                   >
                     <h2>{i + 1}</h2>
-                    <h6>“{item}“</h6>
+                    <h6>"{item}"</h6>
                   </div>
                 ))}
               </div>

@@ -151,12 +151,12 @@ const Welcome = () => {
                       private space? Let's get started by choosing your
                       preferred language.
                     </p>
-                    <div className="flex items-center gap-3">
-                      <Button onClick={FinishHandler} disabled={loading}>
-                        {loading ? "Loading..." : "Lets Get Started"}
-                      </Button>
-                    </div>
                   </T>
+                  <div className="flex items-center gap-3">
+                    <Button onClick={FinishHandler} disabled={loading}>
+                      {loading ? t("Loading...") : t("Lets Get Started")}
+                    </Button>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

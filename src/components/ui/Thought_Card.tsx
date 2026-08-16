@@ -204,18 +204,18 @@ const Thought_Card = ({
         <div className="flex items-start gap-4 w-full">
           <div className="flex-1 min-w-0">
             <p
-              className="text-gray-700 text-lg leading-relaxed cursor-pointer"
+              dir="auto"
+              className={`text-gray-700 text-lg leading-relaxed cursor-pointer whitespace-pre-wrap break-words ${
+                showFullMessage ? "" : "line-clamp-4"
+              }`}
               onClick={() => setShowFullMessage(!showFullMessage)}
             >
-              {showFullMessage ? (
-                currentThought
-              ) : (
-                <>
-                  {currentThought.split(" ").slice(0, 20).join(" ") + "..."}
-                  <span className="mark mx-2 border-b border-transparent hover:border-primary dark:hover:border-primary-foreground">
-                    {t("see more")}
-                  </span>
-                </>
+              {currentThought}
+
+              {!showFullMessage && (
+                <span className="mark mx-2 border-b border-transparent hover:border-primary">
+                  {t("see more")}
+                </span>
               )}
             </p>
             <div className="flex items-center gap-2 mb-3">
@@ -567,7 +567,7 @@ const Thought_Card = ({
             />
             <motion.div
               {...fadeUp}
-              className="relative w-full max-w-xl h-fit p-5 text-center rounded-2xl border-2 border-primary/20 dark:border-primary bg-background overflow-hidden z-10"
+              className="relative w-full max-w-4xl h-fit p-5 text-center rounded-2xl border-2 border-primary/20 dark:border-primary bg-background overflow-hidden z-10"
             >
               <Button
                 variant={"outline"}
@@ -585,8 +585,9 @@ const Thought_Card = ({
               <div className="w-full flex flex-col items-start gap-4">
                 <textarea
                   value={editThoughtText}
+                  dir="auto"
                   onChange={(e) => setEditThoughtText(e.target.value)}
-                  className="w-full h-52 p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200"
+                  className="w-full h-120 p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200"
                 />
                 <div className="flex items-center gap-4 w-full justify-center">
                   <Button
