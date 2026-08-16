@@ -9,7 +9,10 @@ export async function signUpAction(formData: FormData) {
   const password = formData.get("password") as string;
   const name = formData.get("name") as string;
 
-  await auth.api.signUpEmail({ body: { email, password, name } });
+  await auth.api.signUpEmail({
+    body: { email, password, name },
+    headers: await headers(),
+  });
   redirect("/Admin/dashboard");
 }
 
@@ -17,7 +20,10 @@ export async function signInAction(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  await auth.api.signInEmail({ body: { email, password } });
+  await auth.api.signInEmail({
+    body: { email, password },
+    headers: await headers(),
+  });
   redirect("/Admin/dashboard");
 }
 
