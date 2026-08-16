@@ -20,10 +20,11 @@ export async function signInAction(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  await auth.api.signInEmail({
+  const result = await auth.api.signInEmail({
     body: { email, password },
     headers: await headers(),
   });
+  console.log("BETTER AUTH RESULT:", result);
   redirect("/Admin/dashboard");
 }
 
