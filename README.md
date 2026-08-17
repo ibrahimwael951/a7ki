@@ -4,8 +4,6 @@
 
 ![A7KI Banner](/public/bannar.png)
 
----
-
 ##  What is A7KI?
 
 **A7KI** is an anonymous storytelling platform that gives people a private space to speak freely, read others' stories, and feel supported — without ever revealing who they are.
@@ -45,49 +43,6 @@ Users can share difficult moments and heavy thoughts, wait for a moderation dead
 
 ---
 
-##  Getting Started
-
-### Prerequisites
-
-- Node.js `>= 18.x`
-- MongoDB instance (local or [Atlas](https://www.mongodb.com/atlas))
-- npm / yarn / pnpm
-
-### Installation
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/a7ki.git
-cd a7ki
-
-# 2. Install dependencies
-npm install
-
-# 3. Set up environment variables
-cp .env.example .env.local
-```
-
-### Environment Variables
-
-Create a `.env.local` file in the root directory:
-
-### Running Locally
-
-```bash
-# Development
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
 ## How It Works
 
 1. **Share Your Story** — Submit your heavy thoughts anonymously. No account required.
@@ -99,14 +54,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ##  Contributing
 
 Contributions are welcome! Here's how to get started:
-
-```bash
-# Fork the repo, then:
-git checkout -b feature/your-feature-name
-git commit -m "feat: add your feature"
-git push origin feature/your-feature-name
-# Open a Pull Request
-```
 
 Please follow the existing code style and make sure your changes don't break any existing functionality.
 
