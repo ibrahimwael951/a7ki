@@ -11,13 +11,14 @@ import { X } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "@/lib/auth-client";
-import { T, useGT, Var } from "gt-next";
+import { T, useGT, useLocale, Var } from "gt-next";
 
 export default function Page() {
   const t = useGT();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const locale = useLocale();
 
   const [message, setMessage] = useState(0);
   const [showForm, setShowForm] = useState<boolean | null>(null);
@@ -25,6 +26,7 @@ export default function Page() {
   const [thought, setThought] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [deletingLoading, setDeletingLoading] = useState(false);
   const [ai_Comment, setAi_Comment] = useState("");
   const [wantEdit, setWantEdit] = useState("");
   const [thought_id, setThought_id] = useState("");
@@ -120,11 +122,13 @@ export default function Page() {
       if (thought_id !== "") {
         response = await axios.put("/api/thought", {
           thoughtId: thought_id,
-          message: thought,
+          thought,
+          locale,
         });
       } else {
         response = await axios.post("/api/thought", {
           thought,
+          locale,
           userId: session.user.id,
         });
       }
@@ -148,6 +152,31 @@ export default function Page() {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const DeleteHandler = async () => {
+    const toastId = toast.loading(t("Deleting....."));
+    setDeletingLoading(true);
+    try {
+      await axios.delete("/api/thought", {
+        data: {
+          thoughtId: thought_id,
+        },
+      });
+
+      toast.success(t("Deleted Successfully"), { id: toastId });
+      setWantEdit("");
+      setAi_Comment("");
+      setThought("");
+      localStorage.removeItem("User_Thought");
+      setThought_id("");
+      setSubmitted(false);
+    } catch (Error) {
+      console.log("delete Error", Error);
+      toast.error(t("Something wrong happened"), { id: toastId });
+    } finally {
+      setDeletingLoading(false);
     }
   };
 
@@ -344,6 +373,18 @@ export default function Page() {
                         >
                           Edit My Thought
                         </Button>
+                        <Var>
+                          <Button
+                            className="w-full"
+                            size={"lg"}
+                            variant={"destructive"}
+                            onClick={DeleteHandler}
+                          >
+                            {deletingLoading
+                              ? t("Deleting......")
+                              : t("Delete This Thought And Start Fresh")}{" "}
+                          </Button>
+                        </Var>
                       </div>
                     </T>
                   </motion.div>
