@@ -233,6 +233,15 @@ export async function PUT(req: Request) {
       );
     }
     await connectDB();
+    
+    const findingThought = await Thought.findOne({ _id: thoughtId });
+    if (findingThought.userId != session.user.id) {
+      return NextResponse.json("thought isn't yours", { status: 400 });
+    }
+
+    if (!findingThought) {
+      return NextResponse.json({ error: "Thought not found" }, { status: 404 });
+    }
 
     let rank = "Unknown";
     let comment = "";
@@ -248,14 +257,6 @@ export async function PUT(req: Request) {
       });
     }
 
-    const findingThought = await Thought.findOne({ _id: thoughtId });
-    if (thought.userId != session.user.id) {
-      return NextResponse.json("thought isn't yours", { status: 400 });
-    }
-
-    if (!findingThought) {
-      return NextResponse.json({ error: "Thought not found" }, { status: 404 });
-    }
 
     const updatedThought = await Thought.findByIdAndUpdate(
       thoughtId,

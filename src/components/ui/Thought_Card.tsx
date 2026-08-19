@@ -8,9 +8,10 @@ import { BadgeX, CircleCheckBig, X, Trash2, Edit } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 import axios from "axios";
 import { ThoughtFeedback } from "@/types/Thoughts";
-import { T, useGT } from "gt-next";
+import { T, useGT, useLocale } from "gt-next";
 import { RankKey } from "@/types/Thoughts_Rank";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const Thought_Card = ({
   thought,
@@ -33,6 +34,7 @@ const Thought_Card = ({
 }) => {
   const { data: session } = useSession();
   const t = useGT();
+  const locale = useLocale();
   const rankConfig = useRankConfig();
 
   // Feedback popup states
@@ -72,8 +74,26 @@ const Thought_Card = ({
 
   const [showFullMessage, setShowFullMessage] = useState<boolean>(withoutSlice);
 
+  const route = useRouter();
   const config = rankConfig[currentRank];
   const Icon = config.icon;
+
+  const handleDeleteThought = async () => {
+    const toastId = toast.loading(t("Deleting....."));
+    try {
+      await axios.delete("/api/thought", {
+        data: {
+          thoughtId,
+        },
+      });
+
+      toast.success(t("Deleted Successfully"), { id: toastId });
+      route.push("/");
+    } catch (Error) {
+      console.log("delete Error", Error);
+      toast.error(t("Something wrong happened"), { id: toastId });
+    }
+  };
 
   // Handle send feedback
   const handleSubmit = async () => {
@@ -166,10 +186,11 @@ const Thought_Card = ({
     try {
       const response = await axios.put(`/api/thought`, {
         thoughtId,
-        message: editThoughtText,
+        thought: editThoughtText,
+        locale,
       });
-      setCurrentThought(response.data.thought);
-      setCurrentRank(response.data.rank);
+      setCurrentThought(response.data.updatedThought.thought);
+      setCurrentRank(response.data.updatedThought.rank);
       toast.success(t("Thought updated successfully!"));
       setShowEditThought(false);
     } catch (error: any) {
@@ -218,7 +239,7 @@ const Thought_Card = ({
                 </span>
               )}
             </p>
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mt-3">
               <p className="text-xs">
                 {new Date(createdAt).toLocaleDateString()} •{" "}
                 {new Date(createdAt).toLocaleTimeString([], {
@@ -231,53 +252,96 @@ const Thought_Card = ({
         </div>
 
         <div className="mt-2 w-full flex flex-col lg:flex-row justify-between lg:items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className={`${config.iconColor} mt-1`}>
-              <Icon size={24} strokeWidth={2} />
-            </div>
-            <span
-              className={`${config.badge} text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-wide`}
-            >
-              {config.label}
-            </span>
-          </div>
-          {userId ? (
-            <div className="flex items-center gap-2 w-full lg:w-fit">
-              {withUserBTN && (
-                <Button
-                  link={`/Admin/users/${userId}`}
-                  className="text-xs 2xl:text-sm w-2/4"
-                >
-                  {t("See User Profile")}
-                </Button>
-              )}
-              <Button
-                variant={"outline"}
-                className={`text-xs 2xl:text-sm ${
-                  withUserBTN ? "w-2/4" : "w-full"
-                }`}
-                onClick={() => setShowSendFB(true)}
-              >
-                {t("Send Feedback")}
-              </Button>
-            </div>
-          ) : (
-            <Button onClick={() => setShowEditThought(true)}>
-              {t("Edit my thought")}
-            </Button>
-          )}
+          {(() => {
+            const isAdmin = session?.user?.role === "admin";
+            const isOwner =
+              !userId || (session?.user?.id && session.user.id === userId);
+
+            if (isAdmin && userId) {
+              return (
+                <>
+                  <div className="flex items-center gap-3">
+                    <div className={`${config.iconColor} mt-1`}>
+                      <Icon size={24} strokeWidth={2} />
+                    </div>
+                    <span
+                      className={`${config.badge} text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-wide`}
+                    >
+                      {config.label}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 w-full lg:w-fit">
+                    {withUserBTN && (
+                      <Button
+                        link={`/Admin/users/${userId}`}
+                        className="text-xs 2xl:text-sm w-2/4"
+                      >
+                        {t("See User Profile")}
+                      </Button>
+                    )}
+                    <Button
+                      variant={"outline"}
+                      className={`text-xs 2xl:text-sm ${
+                        withUserBTN ? "w-2/4" : "w-full"
+                      }`}
+                      onClick={() => setShowSendFB(true)}
+                    >
+                      {t("Send Feedback")}
+                    </Button>
+                  </div>
+                </>
+              );
+            }
+
+            if (isOwner) {
+              return (
+                <>
+                  <div className="flex items-center gap-3">
+                    <div className={`${config.iconColor} mt-1`}>
+                      <Icon size={24} strokeWidth={2} />
+                    </div>
+                    <span
+                      className={`${config.badge} text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-wide`}
+                    >
+                      {config.label}
+                    </span>
+                  </div>
+                  <div className="flex justify-center items-center gap-5">
+                    <Button onClick={() => setShowEditThought(true)}>
+                      {t("Edit my thought")}
+                    </Button>
+                    <Button
+                      onClick={handleDeleteThought}
+                      variant={"destructive"}
+                    >
+                      {t("Delete my thought")}
+                    </Button>
+                  </div>
+                </>
+              );
+            }
+
+            return null;
+          })()}
         </div>
 
         {/* Show feedback count button */}
-        {FeedBack && FeedBack.length > 0 && (
-          <Button
-            variant="outline"
-            className="w-full mt-2"
-            onClick={() => setShowFeedbackPopup(true)}
-          >
-            {t("View Admin Messages")} ({FeedBack.length})
-          </Button>
-        )}
+        {FeedBack &&
+          FeedBack.length > 0 &&
+          (() => {
+            const isAdmin = session?.user?.role === "admin";
+            const isOwner =
+              !userId || (session?.user?.id && session.user.id === userId);
+            return isAdmin || isOwner;
+          })() && (
+            <Button
+              variant="outline"
+              className="w-full mt-2"
+              onClick={() => setShowFeedbackPopup(true)}
+            >
+              {t("View Admin Messages")} ({FeedBack.length})
+            </Button>
+          )}
       </motion.div>
 
       {/* View Feedback Messages Popup */}
