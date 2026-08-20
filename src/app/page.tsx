@@ -241,7 +241,7 @@ export default function Page() {
             transition={{ ...transition, delay: 0.2 }}
             className="relative min-h-80 w-full overflow-hidden"
           >
-            <div className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-[900] lg:w-[700] h-[900] lg:h-[700]">
+            <div className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-[800] lg:w-[700] h-[800] lg:h-[700]">
               <RiveComponent />
             </div>
           </motion.div>

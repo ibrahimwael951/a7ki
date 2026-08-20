@@ -4,6 +4,8 @@ import { Thought } from "@/models/Thought";
 import axios from "axios";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { Comment } from "@/models/Comment";
+import { ThoughtFeedback } from "@/models/ThoughtFeedback";
 
 // Shared helper so POST and PUT don't duplicate the same AI call/parsing logic.
 async function classifyThought(
@@ -314,10 +316,18 @@ export async function DELETE(req: Request) {
       );
     }
 
-    await Thought.findByIdAndDelete(thoughtId);
+    // Delete the thought, all its comments (top-level + nested replies), and its feedback
+    const [deletedThought, deletedCommentsResult] = await Promise.all([
+      Thought.findByIdAndDelete(thoughtId),
+      Comment.deleteMany({ thoughtId }),
+      ThoughtFeedback.deleteMany({ thoughtId }), // remove this line if you don't have a ThoughtFeedback model in scope here
+    ]);
 
     return NextResponse.json(
-      { message: "Deleted successfully" },
+      {
+        message: "Deleted successfully",
+        deletedCommentsCount: deletedCommentsResult.deletedCount,
+      },
       { status: 200 },
     );
   } catch (err) {

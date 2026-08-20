@@ -58,6 +58,12 @@ const Thought_Card = ({
   const [editFeedbackText, setEditFeedbackText] = useState<string>("");
   const [editLoading, setEditLoading] = useState<boolean>(false);
 
+  // Delete THOUGHT confirmation popup (separate from feedback delete confirm)
+  const [showDeleteThoughtConfirm, setShowDeleteThoughtConfirm] =
+    useState<boolean>(false);
+  const [deleteThoughtLoading, setDeleteThoughtLoading] =
+    useState<boolean>(false);
+
   // Delete confirmation popup
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
   const [deletingFeedbackId, setDeletingFeedbackId] = useState<string | null>(
@@ -78,7 +84,8 @@ const Thought_Card = ({
   const config = rankConfig[currentRank];
   const Icon = config.icon;
 
-  const handleDeleteThought = async () => {
+  const confirmDeleteThought = async () => {
+    setDeleteThoughtLoading(true);
     const toastId = toast.loading(t("Deleting....."));
     try {
       await axios.delete("/api/thought", {
@@ -92,9 +99,11 @@ const Thought_Card = ({
     } catch (Error) {
       console.log("delete Error", Error);
       toast.error(t("Something wrong happened"), { id: toastId });
+    } finally {
+      setDeleteThoughtLoading(false);
+      setShowDeleteThoughtConfirm(false);
     }
   };
-
   // Handle send feedback
   const handleSubmit = async () => {
     setLoading(true);
@@ -311,7 +320,7 @@ const Thought_Card = ({
                       {t("Edit my thought")}
                     </Button>
                     <Button
-                      onClick={handleDeleteThought}
+                      onClick={() => setShowDeleteThoughtConfirm(true)}
                       variant={"destructive"}
                     >
                       {t("Delete my thought")}
@@ -428,7 +437,7 @@ const Thought_Card = ({
                                     handleDeleteFeedbackClick(item._id)
                                   }
                                 >
-                                  <Trash2 size={16} className="text-red-600" />
+                                  <Trash2 size={16} className="text-destructive" />
                                 </Button>
                               </>
                             )}
@@ -469,7 +478,7 @@ const Thought_Card = ({
             >
               <div className="flex flex-col items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
-                  <Trash2 size={32} className="text-red-600" />
+                  <Trash2 size={32} className="text-destructive" />
                 </div>
                 <h3 className="font-bold text-xl">{t("Delete Feedback")}</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -489,7 +498,7 @@ const Thought_Card = ({
                   <Button
                     onClick={confirmDeleteFeedback}
                     disabled={deleteLoading}
-                    className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                    className="flex-1 bg-destructive hover:bg-destructive/80 text-white"
                   >
                     {deleteLoading ? t("Deleting...") : t("Delete")}
                   </Button>
@@ -500,6 +509,59 @@ const Thought_Card = ({
         )}
       </AnimatePresence>
 
+      {/* Delete THOUGHT Confirmation Popup */}
+      <AnimatePresence>
+        {showDeleteThoughtConfirm && (
+          <motion.div
+            {...fadeOnly}
+            className="fixed top-0 left-0 h-screen w-full flex justify-center items-center z-70 px-5"
+          >
+            <div
+              className="absolute top-0 left-0 w-full h-full bg-black/40 backdrop-blur-xs"
+              onClick={() =>
+                !deleteThoughtLoading && setShowDeleteThoughtConfirm(false)
+              }
+            />
+            <motion.div
+              {...fadeUp}
+              className="relative w-full max-w-md p-6 text-center rounded-2xl border-2 border-primary/20 dark:border-primary bg-background overflow-hidden z-10"
+            >
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
+                  <Trash2 size={32} className="text-destructive" />
+                </div>
+                <h3 className="font-bold text-xl">
+                  {t("Delete This Thought")}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {t(
+                    "This will permanently delete this thought and ALL of its comments and replies. This action cannot be undone.",
+                  )}
+                </p>
+                <div className="flex items-center gap-3 w-full mt-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowDeleteThoughtConfirm(false)}
+                    disabled={deleteThoughtLoading}
+                    className="flex-1"
+                  >
+                    {t("Cancel")}
+                  </Button>
+                  <Button
+                    onClick={confirmDeleteThought}
+                    disabled={deleteThoughtLoading}
+                    className="flex-1 bg-destructive hover:bg-destructive/80 text-white"
+                  >
+                    {deleteThoughtLoading
+                      ? t("Deleting...")
+                      : t("Yes, Delete Everything")}
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Send Feedback Popup */}
       <AnimatePresence>
         {showSendFB && (
@@ -540,10 +602,10 @@ const Thought_Card = ({
                     {...transition}
                     className="flex flex-col justify-center items-center gap-5 text-xl m-5"
                   >
-                    <BadgeX size={50} className="text-red-600" />
+                    <BadgeX size={50} className="text-destructive" />
                     <h3>{t("Error while submitting")}</h3>
                     <p>
-                      <span className="text-red-600">Error : </span> {error}
+                      <span className="text-destructive">Error : </span> {error}
                     </p>
                   </motion.div>
                 ) : submitted ? (

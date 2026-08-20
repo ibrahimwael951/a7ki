@@ -9,6 +9,7 @@ import Admin_Loading from "@/components/ui/Admin_Loading";
 import { useRouter } from "next/navigation";
 import { Thought } from "@/types/Thoughts";
 import Thought_Card from "@/components/ui/Thought_Card";
+import Comment_Section from "@/components/ui/Comment_Section";
 import axios from "axios";
 import { T, useGT } from "gt-next";
 
@@ -47,7 +48,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   if (isSessionPending) return <Admin_Loading />;
 
   return (
-    <main className="py-20 max-w-4xl mx-auto px-4 min-h-[80vh] flex flex-col justify-start">
+    <main className="pt-20 pb-30 max-w-4xl mx-auto px-4 min-h-[80vh] flex flex-col justify-start">
       <T>
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -98,7 +99,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         )}
 
         {!loading && !error && thoughtData && (
-          <div className="w-full">
+          <div className="w-full h-full flex flex-col justify-baseline">
             <Thought_Card
               thoughtId={thoughtData._id}
               ThoughtFeedback={thoughtData.feedback}
@@ -108,6 +109,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               createdAt={thoughtData.createdAt}
               withoutSlice
             />
+
+            <Comment_Section thoughtId={thoughtData._id} />
           </div>
         )}
       </motion.div>
