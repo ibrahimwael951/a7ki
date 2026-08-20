@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import { use, useEffect, useState } from "react";
-import { Bug  } from "lucide-react";
+import { Bug } from "lucide-react";
 import Admin_Loading from "@/components/ui/Admin_Loading";
 import { useRouter } from "next/navigation";
 import { Thought } from "@/types/Thoughts";
@@ -51,14 +51,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       <T>
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-xl font-semibold flex items-center gap-2">
-            <span className="mark">{t("Thought")}</span>
+            <span className="mark">Thought</span>
           </h2>
           <Button
             onClick={() => router.back()}
             variant="outline"
             className="px-3 py-1 rounded-md border text-sm flex flex-row justify-center items-center gap-2 "
           >
-            {t("Go Back")}
+            Go Back
           </Button>
         </div>
       </T>
@@ -84,12 +84,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             </div>
             <T>
               <h2>
-                {t("Error")} <span className="text-red-600">404</span>
+                Error <span className="text-red-600">404</span>
               </h2>
               <h6>
-                {t(
-                  "The requested thought could not be loaded. It may have been deleted or the link might be invalid.",
-                )}
+                The requested thought could not be loaded. It may have been
+                deleted or the link might be invalid.
               </h6>
             </T>
             <p>

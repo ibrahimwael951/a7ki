@@ -8,6 +8,7 @@ import { AdminProvider } from "../providers/AdminContext";
 import { GTProvider, useLocale } from "gt-next";
 import Welcome from "@/components/Welcome";
 import NextTopLoader from "nextjs-toploader";
+import NavigationBar from "@/components/NavigationBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -73,6 +74,7 @@ export default function RootLayout({
             <AdminProvider>
               <Welcome />
               <Navbar />
+              <NavigationBar />
               {children}
                <Toaster richColors closeButton />
             </AdminProvider>

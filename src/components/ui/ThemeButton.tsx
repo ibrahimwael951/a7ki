@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "./select";
 import { useGT } from "gt-next";
+import { cn } from "@/lib/utils";
 
 export const ThemeButton = () => {
   const { setTheme, resolvedTheme } = useTheme();
@@ -40,7 +41,7 @@ export const ThemeButton = () => {
   );
 };
 
-export const ThemeSelect = () => {
+export const ThemeSelect = ({ className }: { className?: string }) => {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const t = useGT();
@@ -55,7 +56,7 @@ export const ThemeSelect = () => {
 
   return (
     <Select value={resolvedTheme} onValueChange={(value) => setTheme(value)}>
-      <SelectTrigger className="w-[140px]">
+      <SelectTrigger className={cn(`w-[140px]`, className)}>
         <SelectValue placeholder="Select theme" />
       </SelectTrigger>
 

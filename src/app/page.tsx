@@ -1,5 +1,5 @@
 "use client";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, LayoutGroup } from "motion/react";
 import { useRive } from "@rive-app/react-canvas";
 import { useEffect, useRef, useState } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
@@ -224,296 +224,304 @@ export default function Page() {
     }
   };
 
-  const rankBadgeColor: Record<string, string> = {
-    good: "bg-green-100 text-green-700",
-    okay: "bg-blue-100 text-blue-700",
-    "kinda bad": "bg-orange-100 text-orange-700",
-    bad: "bg-red-100 text-red-700",
-    Unknown: "bg-gray-100 text-gray-700",
-  };
+  // Whether the right panel should currently be rendered at all
+  const showRecentThoughtPanel = isThereRecentThought && !hideRecentThought;
 
   return (
-    <main className="relative max-w-full! flex flex-col md:flex-row justify-center items-center pt-15 p-4 gap-8 overflow-hidden">
-      {/* LEFT SIDE — everything that used to be the whole page */}
-      <div
-        className={` ${!hideRecentThought && isThereRecentThought && "md:w-1/2"} w-full flex flex-col items-center duration-300`}
-      >
+    <LayoutGroup>
+      <main className="relative max-w-full! flex flex-col md:flex-row justify-center items-center pt-15 md:pt-0 p-4 gap-8 overflow-hidden">
+        {/* LEFT SIDE — everything that used to be the whole page */}
         <motion.div
-          variants={fadeUp}
-          transition={{ ...transition, delay: 0.2 }}
-          className="relative min-h-80 w-full overflow-hidden"
+          layout
+          transition={{ duration: 0.35, ease: "easeInOut" }}
+          className="flex-1 w-full flex flex-col items-center"
         >
-          <div className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-[900] lg:w-[700] h-[900] lg:h-[700]">
-            <RiveComponent />
-          </div>
-        </motion.div>
-        <AnimatePresence mode="wait">
-          {!showForm ? (
-            <motion.div
-              key="intro"
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="flex flex-col items-center justify-center w-full"
-            >
+          <motion.div
+            variants={fadeUp}
+            transition={{ ...transition, delay: 0.2 }}
+            className="relative min-h-80 w-full overflow-hidden"
+          >
+            <div className="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-[900] lg:w-[700] h-[900] lg:h-[700]">
+              <RiveComponent />
+            </div>
+          </motion.div>
+          <AnimatePresence mode="wait">
+            {!showForm ? (
               <motion.div
-                variants={fadeUp}
-                transition={{ ...transition, delay: 0.3 }}
-                className="w-full md:w-4/5 flex flex-col justify-center items-center gap-5 text-center"
+                key="intro"
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="flex flex-col items-center justify-center w-full"
               >
-                <AnimatePresence mode="wait">
-                  <motion.div key={message} {...fadeOnly}>
-                    <TextType
-                      text={Messages[message]}
-                      onSentenceComplete={() => setButtonEnabled(true)}
-                      loop={false}
-                      className="text-4xl md:text-5xl font-medium"
-                    />
-                  </motion.div>
-                </AnimatePresence>
+                <motion.div
+                  variants={fadeUp}
+                  transition={{ ...transition, delay: 0.3 }}
+                  className="w-full md:w-4/5 flex flex-col justify-center items-center gap-5 text-center"
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div key={message} {...fadeOnly}>
+                      <TextType
+                        text={Messages[message]}
+                        onSentenceComplete={() => setButtonEnabled(true)}
+                        loop={false}
+                        className="text-4xl md:text-5xl font-medium"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
 
-                <motion.div variants={fadeUp} transition={transition}>
-                  <Button disabled={!buttonEnabled} onClick={btnHandler}>
-                    {message === 0 ? t("Hi!") : t("Okay, Got it")}
-                  </Button>
+                  <motion.div variants={fadeUp} transition={transition}>
+                    <Button disabled={!buttonEnabled} onClick={btnHandler}>
+                      {message === 0 ? t("Hi!") : t("Okay, Got it")}
+                    </Button>
+                  </motion.div>
                 </motion.div>
               </motion.div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="form"
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="flex flex-col items-center justify-center w-full"
-            >
+            ) : (
               <motion.div
-                variants={fadeUp}
-                transition={{ ...transition, delay: 0.3 }}
-                className="w-full max-w-2xl flex flex-col justify-center items-center gap-5"
+                key="form"
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="flex flex-col items-center justify-center w-full"
               >
-                <AnimatePresence mode="wait">
-                  {!submitted ? (
-                    <form
-                      key="form-content"
-                      onSubmit={handleSubmit}
-                      className="w-full space-y-5"
-                    >
-                      <T>
-                        <motion.h2
-                          variants={fadeUp}
-                          className="text-4xl md:text-5xl font-medium text-center"
-                        >
-                          Share your{" "}
-                          <span className="text-primary dark:text-primary-foreground">
-                            {" "}
-                            thoughts{" "}
-                          </span>
-                        </motion.h2>
-                      </T>
-
-                      <motion.div
-                        {...fadeUp}
-                        {...transition}
-                        className="relative w-full"
+                <motion.div
+                  variants={fadeUp}
+                  transition={{ ...transition, delay: 0.3 }}
+                  className="w-full max-w-2xl flex flex-col justify-center items-center gap-5"
+                >
+                  <AnimatePresence mode="wait">
+                    {!submitted ? (
+                      <form
+                        key="form-content"
+                        onSubmit={handleSubmit}
+                        className="w-full space-y-5"
                       >
-                        <textarea
-                          ref={textareaRef}
-                          dir="auto"
-                          value={thought}
-                          onChange={(e) => ThoughtHandler(e.target.value)}
-                          maxLength={2000}
-                          placeholder={t(
-                            "Write your negative thoughts here... Remember, this is anonymous and safe.",
-                          )}
-                          className="w-full min-h-40 max-h-[700px] p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 resize-none overflow-y-auto"
-                          disabled={isSubmitting}
-                        />
-                        <p className="absolute bottom-3 right-4">
-                          {thought.length}/ 2000
-                        </p>
-                      </motion.div>
-
-                      <motion.div
-                        {...fadeUp}
-                        {...transition}
-                        className="flex justify-center"
-                      >
-                        <Button
-                          type="submit"
-                          disabled={isSubmitting}
-                          className="w-full"
-                        >
-                          {isSubmitting ? (
-                            <span className="flex items-center justify-center gap-2">
-                              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                              {t("Submitting...")}
+                        <T>
+                          <motion.h2
+                            variants={fadeUp}
+                            className="text-4xl md:text-5xl font-medium text-center"
+                          >
+                            Share your{" "}
+                            <span className="text-primary dark:text-primary-foreground">
+                              {" "}
+                              thoughts{" "}
                             </span>
-                          ) : (
-                            t("Submit")
-                          )}
-                        </Button>
-                      </motion.div>
-                      <T>
-                        <p className="text-center">
-                          Want examples?{" "}
-                          <span
-                            onClick={openExamples}
-                            className="text-primary dark:text-primary-foreground border-b border-primary dark:border-primary-foreground cursor-pointer"
-                          >
-                            Examples
-                          </span>
-                        </p>
-                      </T>
-                    </form>
-                  ) : wantEdit == "" ? (
-                    <motion.div
-                      key="success"
-                      {...fadeOnly}
-                      className="text-center space-y-4"
-                    >
-                      <T>
-                        <Var>
-                          <h4 className="whitespace-pre-wrap">{ai_Comment}</h4>
-                        </Var>
+                          </motion.h2>
+                        </T>
 
-                        <div className="flex flex-col justify-center items-center gap-4 mt-5">
-                          <Button
-                            className="w-full"
-                            size={"lg"}
-                            link={"/moments"}
-                          >
-                            See People Moments!
-                          </Button>
-                          <Button
-                            className="w-full"
-                            size={"lg"}
-                            link={"/dashboard/Thoughts"}
-                            variant={"outline"}
-                          >
-                            See My Thoughts
-                          </Button>
-                        </div>
-                      </T>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="success"
-                      {...fadeOnly}
-                      className="text-center space-y-4"
-                    >
-                      <T>
-                        <Var>
-                          <h4 className="whitespace-pre-wrap">{wantEdit}</h4>
-                        </Var>
+                        <motion.div
+                          {...fadeUp}
+                          {...transition}
+                          className="relative w-full"
+                        >
+                          <textarea
+                            ref={textareaRef}
+                            dir="auto"
+                            value={thought}
+                            onChange={(e) => ThoughtHandler(e.target.value)}
+                            maxLength={2000}
+                            placeholder={t(
+                              "Write your negative thoughts here... Remember, this is anonymous and safe.",
+                            )}
+                            className="w-full min-h-40 max-h-[700px] p-2.5 rounded-lg bg-neutral-300/50 dark:bg-neutral-700/50 mt-3 mb-1.5 outline-none border-2 border-neutral-300/50 dark:border-neutral-700/50 focus:bg-transparent dark:focus:bg-transparent duration-200 resize-none overflow-y-auto"
+                            disabled={isSubmitting}
+                          />
+                          <p className="absolute bottom-3 right-4">
+                            {thought.length}/ 2000
+                          </p>
+                        </motion.div>
 
-                        <div className="flex flex-col justify-center items-center gap-4 mt-5">
+                        <motion.div
+                          {...fadeUp}
+                          {...transition}
+                          className="flex justify-center"
+                        >
                           <Button
+                            type="submit"
+                            disabled={isSubmitting}
                             className="w-full"
-                            size={"lg"}
-                            onClick={() => {
-                              (setSubmitted(false), setShowForm(true));
-                            }}
                           >
-                            Edit My Thought
+                            {isSubmitting ? (
+                              <span className="flex items-center justify-center gap-2">
+                                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                {t("Submitting...")}
+                              </span>
+                            ) : (
+                              t("Submit")
+                            )}
                           </Button>
+                        </motion.div>
+                        <T>
+                          <p className="text-center">
+                            Want examples?{" "}
+                            <span
+                              onClick={openExamples}
+                              className="text-primary dark:text-primary-foreground border-b border-primary dark:border-primary-foreground cursor-pointer"
+                            >
+                              Examples
+                            </span>
+                          </p>
+                        </T>
+                      </form>
+                    ) : wantEdit == "" ? (
+                      <motion.div
+                        key="success"
+                        {...fadeOnly}
+                        className="text-center space-y-4"
+                      >
+                        <T>
                           <Var>
+                            <h4 className="whitespace-pre-wrap">{ai_Comment}</h4>
+                          </Var>
+
+                          <div className="flex flex-col justify-center items-center gap-4 mt-5">
                             <Button
                               className="w-full"
                               size={"lg"}
-                              variant={"destructive"}
-                              onClick={DeleteHandler}
+                              link={"/moments"}
                             >
-                              {deletingLoading
-                                ? t("Deleting......")
-                                : t("Delete This Thought And Start Fresh")}{" "}
+                              See People Moments!
                             </Button>
+                            <Button
+                              className="w-full"
+                              size={"lg"}
+                              link={"/dashboard/Thoughts"}
+                              variant={"outline"}
+                            >
+                              See My Thoughts
+                            </Button>
+                          </div>
+                        </T>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="success"
+                        {...fadeOnly}
+                        className="text-center space-y-4"
+                      >
+                        <T>
+                          <Var>
+                            <h4 className="whitespace-pre-wrap">{wantEdit}</h4>
                           </Var>
-                        </div>
-                      </T>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+
+                          <div className="flex flex-col justify-center items-center gap-4 mt-5">
+                            <Button
+                              className="w-full"
+                              size={"lg"}
+                              onClick={() => {
+                                (setSubmitted(false), setShowForm(true));
+                              }}
+                            >
+                              Edit My Thought
+                            </Button>
+                            <Var>
+                              <Button
+                                className="w-full"
+                                size={"lg"}
+                                variant={"destructive"}
+                                onClick={DeleteHandler}
+                              >
+                                {deletingLoading
+                                  ? t("Deleting......")
+                                  : t("Delete This Thought And Start Fresh")}{" "}
+                              </Button>
+                            </Var>
+                          </div>
+                        </T>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
               </motion.div>
-            </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* RIGHT SIDE — recent thoughts, desktop only.
+            Fully animates out (width + opacity) then unmounts completely. */}
+        <AnimatePresence>
+          {showRecentThoughtPanel && (
+            <motion.section
+              key="recent-thoughts"
+              layout
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: "45%", opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+              style={{ overflow: "hidden" }}
+              className="hidden md:flex flex-col gap-4 sticky top-10 h-full max-h-[85vh]"
+            >
+              {/* inner wrapper keeps content from squishing/wrapping while width animates */}
+              <div className="flex flex-col gap-4 w-full min-w-[320px] pr-5 h-full max-h-[85vh] overflow-y-auto">
+                <T>
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-2xl font-medium">
+                      Your Recent <span className="mark">Thoughts</span>
+                    </h3>
+                    <Button onClick={() => setHideRecentThought(true)}>
+                      Hide For Now!
+                    </Button>
+                  </div>
+                </T>
+                <ScrollArea className="flex flex-col gap-4 h-full max-h-[85vh] overflow-y-auto px-5">
+                  {recentThoughts.map((item) => (
+                    <Link
+                      key={item._id}
+                      href={`/thought/${item._id}`}
+                      className="block rounded-xl border-2 border-neutral-300/50 dark:border-neutral-700/50 p-4 my-5 bg-neutral-200/40 dark:bg-neutral-800/40 hover:bg-neutral-200/70 dark:hover:bg-neutral-800/70 transition-colors"
+                    >
+                      <p className="text-sm line-clamp-2">{item.thought}</p>
+                      <div className="flex items-center justify-end gap-2 mt-2">
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(item.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </ScrollArea>
+              </div>
+            </motion.section>
           )}
         </AnimatePresence>
-      </div>
 
-      {/* RIGHT SIDE — recent thoughts, desktop only */}
-      {recentThoughts.length != 0 && (
-        <section
-          className={`hidden md:flex ${!hideRecentThought && isThereRecentThought ? "md:w-1/2 " : "w-0"} flex-col gap-4 sticky top-10 h-full max-h-[85vh] overflow-y-auto pr-5 duration-300`}
-        >
-          <T>
-            <div
-              className={` ${hideRecentThought ? "opacity-0" : "opacity-100 "} flex justify-between items-center duration-200`}
-            >
-              <h3 className="text-2xl font-medium">
-                Your Recent <span className="mark">Thoughts</span>
-              </h3>
-              <Button onClick={() => setHideRecentThought(true)}>
-                Hide For Now!
-              </Button>
-            </div>
-          </T>
-          <ScrollArea
-            className={`flex flex-col gap-4 h-full max-h-[85vh] overflow-y-auto pr-5`}
-          >
-            {recentThoughts.map((item) => (
-              <Link
-                key={item._id}
-                href={`/thought/${item._id}`}
-                className="block rounded-xl border-2 border-neutral-300/50 dark:border-neutral-700/50 p-4 my-5 bg-neutral-200/40 dark:bg-neutral-800/40 hover:bg-neutral-200/70 dark:hover:bg-neutral-800/70 transition-colors"
+        <AnimatePresence>
+          {showExamples && (
+            <>
+              <motion.div
+                {...fadeOnly}
+                onClick={closeExamples}
+                className="hidden md:flex fixed top-0 right-0 bg-black/30 backdrop-blur-xs w-full h-full z-30"
+              />
+              <motion.div
+                initial={{ x: "100%", opacity: 0 }}
+                exit={{ x: "100%", opacity: 0 }}
+                animate={{ x: "0", opacity: 100 }}
+                transition={{ duration: 0.3, stiffness: 10 }}
+                className="fixed top-0 right-0 bg-accent text-white w-full md:w-4/5 lg:w-3/5 p-10 pt-20 md:rounded-l-2xl h-full z-40"
               >
-                <p className="text-sm line-clamp-2">{item.thought}</p>
-                <div className="flex items-center justify-end gap-2 mt-2">
-                  <span className="text-xs text-muted-foreground">
-                    {new Date(item.createdAt).toLocaleDateString()}
-                  </span>
+                <Button onClick={closeExamples} className="scale-110 mb-3">
+                  <X size={40} />
+                </Button>
+                <h1 className="mb-4 text-white dark:text-primary-foreground">
+                  {t("Examples")}
+                </h1>
+                <div className="flex flex-col gap-4">
+                  {Examples.map((item, i) => (
+                    <div
+                      key={i}
+                      className="flex justify-start items-start md:items-end gap-2"
+                    >
+                      <h2>{i + 1}</h2>
+                      <h6>"{item}"</h6>
+                    </div>
+                  ))}
                 </div>
-              </Link>
-            ))}
-          </ScrollArea>
-        </section>
-      )}
-
-      <AnimatePresence>
-        {showExamples && (
-          <>
-            <motion.div
-              {...fadeOnly}
-              onClick={closeExamples}
-              className="hidden md:flex fixed top-0 right-0 bg-black/30 backdrop-blur-xs w-full h-full z-30"
-            />
-            <motion.div
-              initial={{ x: "100%", opacity: 0 }}
-              exit={{ x: "100%", opacity: 0 }}
-              animate={{ x: "0", opacity: 100 }}
-              transition={{ duration: 0.3, stiffness: 10 }}
-              className="fixed top-0 right-0 bg-accent text-white w-full md:w-4/5 lg:w-3/5 p-10 pt-20 md:rounded-l-2xl h-full z-40"
-            >
-              <Button onClick={closeExamples} className="scale-110 mb-3">
-                <X size={40} />
-              </Button>
-              <h1 className="mb-4 text-white dark:text-primary-foreground">
-                {t("Examples")}
-              </h1>
-              <div className="flex flex-col gap-4">
-                {Examples.map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex justify-start items-start md:items-end gap-2"
-                  >
-                    <h2>{i + 1}</h2>
-                    <h6>"{item}"</h6>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </main>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      </main>
+    </LayoutGroup>
   );
 }
