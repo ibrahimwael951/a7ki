@@ -266,6 +266,34 @@ const Thought_Card = ({
             const isOwner =
               !userId || (session?.user?.id && session.user.id === userId);
 
+            if (isOwner) {
+              return (
+                <>
+                  <div className="flex items-center gap-3">
+                    <div className={`${config.iconColor} mt-1`}>
+                      <Icon size={24} strokeWidth={2} />
+                    </div>
+                    <span
+                      className={`${config.badge} text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-wide`}
+                    >
+                      {config.label}
+                    </span>
+                  </div>
+                  <div className="flex justify-center items-center gap-5">
+                    <Button onClick={() => setShowEditThought(true)}>
+                      {t("Edit my thought")}
+                    </Button>
+                    <Button
+                      onClick={() => setShowDeleteThoughtConfirm(true)}
+                      variant={"destructive"}
+                    >
+                      {t("Delete my thought")}
+                    </Button>
+                  </div>
+                </>
+              );
+            }
+
             if (isAdmin && userId) {
               return (
                 <>
@@ -296,34 +324,6 @@ const Thought_Card = ({
                       onClick={() => setShowSendFB(true)}
                     >
                       {t("Send Feedback")}
-                    </Button>
-                  </div>
-                </>
-              );
-            }
-
-            if (isOwner) {
-              return (
-                <>
-                  <div className="flex items-center gap-3">
-                    <div className={`${config.iconColor} mt-1`}>
-                      <Icon size={24} strokeWidth={2} />
-                    </div>
-                    <span
-                      className={`${config.badge} text-[10px] font-semibold px-3 py-1 rounded-full uppercase tracking-wide`}
-                    >
-                      {config.label}
-                    </span>
-                  </div>
-                  <div className="flex justify-center items-center gap-5">
-                    <Button onClick={() => setShowEditThought(true)}>
-                      {t("Edit my thought")}
-                    </Button>
-                    <Button
-                      onClick={() => setShowDeleteThoughtConfirm(true)}
-                      variant={"destructive"}
-                    >
-                      {t("Delete my thought")}
                     </Button>
                   </div>
                 </>
@@ -437,7 +437,10 @@ const Thought_Card = ({
                                     handleDeleteFeedbackClick(item._id)
                                   }
                                 >
-                                  <Trash2 size={16} className="text-destructive" />
+                                  <Trash2
+                                    size={16}
+                                    className="text-destructive"
+                                  />
                                 </Button>
                               </>
                             )}

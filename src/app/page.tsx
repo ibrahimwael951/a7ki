@@ -28,7 +28,6 @@ export default function Page() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const locale = useLocale();
-
   const [message, setMessage] = useState(0);
   const [showForm, setShowForm] = useState<boolean | null>(null);
   const [buttonEnabled, setButtonEnabled] = useState(false);
@@ -229,7 +228,7 @@ export default function Page() {
 
   return (
     <LayoutGroup>
-      <main className="relative max-w-full! flex flex-col md:flex-row justify-center items-center pt-15 md:pt-0 p-4 gap-8 overflow-hidden">
+      <main className="relative max-w-full! flex flex-col md:flex-row justify-center items-center pt-15 md:pt-0 p-4 pb-15 gap-8 overflow-hidden">
         {/* LEFT SIDE — everything that used to be the whole page */}
         <motion.div
           layout

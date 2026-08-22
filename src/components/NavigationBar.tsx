@@ -21,7 +21,7 @@ const NavigationBar = () => {
       initial={{ y: 60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 260, damping: 24 }}
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-neutral-300/10 dark:bg-neutral-600/10 backdrop-blur-2xl border border-white/10 rounded-2xl z-50 p-1.5 shadow-lg shadow-black/5"
+      className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[80%] md:w-fit flex items-center justify-evenly gap-1 bg-neutral-300/10 dark:bg-neutral-600/10 backdrop-blur-2xl border border-white/10 rounded-2xl z-50 p-1.5 shadow-lg shadow-black/5"
     >
       {navItems.map(({ href, icon: Icon, label }) => {
         const isActive = pathname === href;

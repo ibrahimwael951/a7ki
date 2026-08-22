@@ -12,6 +12,7 @@ import Thought_Card from "@/components/ui/Thought_Card";
 import Comment_Section from "@/components/ui/Comment_Section";
 import axios from "axios";
 import { T, useGT } from "gt-next";
+import { useRive } from "@rive-app/react-canvas";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -21,6 +22,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [thoughtData, setThoughtData] = useState<Thought | null>(null);
   const [error, setError] = useState<string | null>(null);
   const t = useGT();
+
+  const { RiveComponent } = useRive({
+    src: "/Animated_Images/cat.riv",
+    stateMachines: "State Machine 1",
+    autoplay: true,
+  });
 
   const loadThought = async () => {
     setLoading(true);
@@ -48,72 +55,79 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   if (isSessionPending) return <Admin_Loading />;
 
   return (
-    <main className="pt-20 pb-30 max-w-4xl mx-auto px-4 min-h-[80vh] flex flex-col justify-start">
-      <T>
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-xl font-semibold flex items-center gap-2">
-            <span className="mark">Thought</span>
-          </h2>
-          <Button
-            onClick={() => router.back()}
-            variant="outline"
-            className="px-3 py-1 rounded-md border text-sm flex flex-row justify-center items-center gap-2 "
-          >
-            Go Back
-          </Button>
+    <main className="pt-20 pb-30 w-full px-4 min-h-[80vh] flex flex-row-reverse justify-center items-start gap-10">
+      <section className="relative overflow-hidden w-2/4 h-160 hidden xl:inline">
+        <div className="w-[560] h-[560] absolute top-2/4 left-2/4 -translate-2/4 ">
+          <RiveComponent />
         </div>
-      </T>
-
-      <motion.div {...fadeUp} className="flex-1 flex flex-col justify-start">
-        {loading && (
-          <motion.div
-            {...fadeOnly}
-            className="flex flex-col justify-center items-center gap-4 text-xl my-20"
-          >
-            <div className="w-60 h-60 rounded-full border-r border-l-transparent border-primary dark:border-primary-foreground animate-spin" />
-            <span className="animate-pulse">{t("Loading...")}</span>
-          </motion.div>
-        )}
-
-        {error && (
-          <motion.div
-            {...fadeOnly}
-            className="text-center my-10 flex flex-col justify-center items-center gap-4"
-          >
-            <div className="p-4 rounded-full border-2 border-red-600 bg-red-500 dark:bg-red-600/70 text-white">
-              <Bug size={90} strokeWidth={0.6} />
-            </div>
-            <T>
-              <h2>
-                Error <span className="text-red-600">404</span>
-              </h2>
-              <h6>
-                The requested thought could not be loaded. It may have been
-                deleted or the link might be invalid.
-              </h6>
-            </T>
-            <p>
-              <span className="mark"> {t("Error Details")} </span>: {error}
-            </p>
-          </motion.div>
-        )}
-
-        {!loading && !error && thoughtData && (
-          <div className="w-full h-full flex flex-col justify-baseline">
-            <Thought_Card
-              thoughtId={thoughtData._id}
-              ThoughtFeedback={thoughtData.feedback}
-              userId={thoughtData.userId}
-              thought={thoughtData.thought}
-              rank={thoughtData.rank}
-              createdAt={thoughtData.createdAt}
-              withoutSlice
-            />
-
-            <Comment_Section thoughtId={thoughtData._id} />
+      </section>
+      <section className="xl:max-w-3xl! max-w-4xl! flex flex-col justify-start pt-5">
+        <T>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <span className="mark">Thought</span>
+            </h2>
+            <Button
+              onClick={() => router.back()}
+              variant="outline"
+              className="px-3 py-1 rounded-md border text-sm flex flex-row justify-center items-center gap-2 "
+            >
+              Go Back
+            </Button>
           </div>
-        )}
-      </motion.div>
+        </T>
+
+        <motion.div {...fadeUp} className="flex-1 flex flex-col justify-start">
+          {loading && (
+            <motion.div
+              {...fadeOnly}
+              className="flex flex-col justify-center items-center gap-4 text-xl my-20"
+            >
+              <div className="w-60 h-60 rounded-full border-r border-l-transparent border-primary dark:border-primary-foreground animate-spin" />
+              <span className="animate-pulse">{t("Loading...")}</span>
+            </motion.div>
+          )}
+
+          {error && (
+            <motion.div
+              {...fadeOnly}
+              className="text-center my-10 flex flex-col justify-center items-center gap-4"
+            >
+              <div className="p-4 rounded-full border-2 border-red-600 bg-red-500 dark:bg-red-600/70 text-white">
+                <Bug size={90} strokeWidth={0.6} />
+              </div>
+              <T>
+                <h2>
+                  Error <span className="text-red-600">404</span>
+                </h2>
+                <h6>
+                  The requested thought could not be loaded. It may have been
+                  deleted or the link might be invalid.
+                </h6>
+              </T>
+              <p>
+                <span className="mark"> {t("Error Details")} </span>: {error}
+              </p>
+            </motion.div>
+          )}
+
+          {!loading && !error && thoughtData && (
+            <div className="w-full h-full flex flex-col justify-baseline">
+              <Thought_Card
+                thoughtId={thoughtData._id}
+                ThoughtFeedback={thoughtData.feedback}
+                userId={thoughtData.userId}
+                thought={thoughtData.thought}
+                rank={thoughtData.rank}
+                createdAt={thoughtData.createdAt}
+                withoutSlice
+              />
+
+              <Comment_Section thoughtId={thoughtData._id} />
+            </div>
+          )}
+        </motion.div>
+      </section>
     </main>
   );
 }

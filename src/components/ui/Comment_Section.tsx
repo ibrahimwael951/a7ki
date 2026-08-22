@@ -6,7 +6,7 @@ import { fadeOnly, fadeUp } from "@/Animation";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 import { Comment } from "@/types/Comment";
-import { T, useGT } from "gt-next";
+import { T, useGT, useLocale } from "gt-next";
 import { MessageSquare, Pencil, Trash2, CornerDownRight } from "lucide-react";
 import { toast } from "sonner";
 
@@ -14,9 +14,18 @@ type Props = {
   thoughtId: string;
 };
 
+function getErrorMessage(err: any, fallback: string) {
+  return (
+    err?.response?.data?.problem ||
+    err?.response?.data?.error ||
+    fallback
+  );
+}
+
 export default function Comment_Section({ thoughtId }: Props) {
   const { data: session } = useSession();
   const t = useGT();
+  const locale = useLocale();
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,14 +59,14 @@ export default function Comment_Section({ thoughtId }: Props) {
         thoughtId,
         userId: session.user.id,
         content: newComment.trim(),
+        locale,
       });
       setNewComment("");
       await loadComments();
     } catch (err: any) {
-      toast.error(
-        err?.response?.data?.error || "Failed to post comment",
-        { position: "bottom-right" },
-      );
+      toast.error(getErrorMessage(err, t("Failed to post comment")), {
+        position: "bottom-right",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -129,10 +138,6 @@ export default function Comment_Section({ thoughtId }: Props) {
   );
 }
 
-// ---------------------------------------------------------------------
-// Recursive comment node — renders a comment plus its nested replies,
-// and handles edit / delete / reply for that single comment.
-// ---------------------------------------------------------------------
 function CommentItem({
   comment,
   thoughtId,
@@ -147,6 +152,7 @@ function CommentItem({
   depth: number;
 }) {
   const t = useGT();
+  const locale = useLocale();
   const { data: session } = useSession();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -165,14 +171,14 @@ function CommentItem({
         commentId: comment._id,
         userId: currentUserId,
         content: editValue.trim(),
+        locale,
       });
       setIsEditing(false);
       await onChanged();
     } catch (err: any) {
-      toast.error(
-        err?.response?.data?.error || "Failed to edit comment",
-        { position: "bottom-right" },
-      );
+      toast.error(getErrorMessage(err, t("Failed to edit comment")), {
+        position: "bottom-right",
+      });
     } finally {
       setBusy(false);
     }
@@ -186,10 +192,9 @@ function CommentItem({
       });
       await onChanged();
     } catch (err: any) {
-      toast.error(
-        err?.response?.data?.error || "Failed to delete comment",
-        { position: "bottom-right" },
-      );
+      toast.error(getErrorMessage(err, t("Failed to delete comment")), {
+        position: "bottom-right",
+      });
     } finally {
       setBusy(false);
     }
@@ -205,15 +210,15 @@ function CommentItem({
         userId: session.user.id,
         content: replyValue.trim(),
         parentCommentId: comment._id,
+        locale,
       });
       setReplyValue("");
       setIsReplying(false);
       await onChanged();
     } catch (err: any) {
-      toast.error(
-        err?.response?.data?.error || "Failed to post reply",
-        { position: "bottom-right" },
-      );
+      toast.error(getErrorMessage(err, t("Failed to post reply")), {
+        position: "bottom-right",
+      });
     } finally {
       setBusy(false);
     }
@@ -229,7 +234,7 @@ function CommentItem({
         {isEditing ? (
           <div className="flex flex-col gap-2">
             <textarea
-            dir="auto"
+              dir="auto"
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
               maxLength={1000}
