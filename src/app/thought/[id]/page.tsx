@@ -24,7 +24,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const t = useGT();
 
   const { RiveComponent } = useRive({
-    src: "/Animated_Images/cat.riv",
+    src: "/Animated_Images/Cat.riv",
     stateMachines: "State Machine 1",
     autoplay: true,
   });

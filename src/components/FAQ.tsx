@@ -22,7 +22,7 @@ const FAQ = () => {
           : " flex-col justify-center items-center text-center"
       } gap-4 my-10 `}
     >
-      <div className="w-full md:w-2/4 max-w-xl">
+      <div className="w-full max-w-xl">
         <SimpleTitle
           title={t("FAQs")}
           className={`mb-3 ${!isContactPage && "mx-auto"} `}
@@ -79,7 +79,7 @@ const FAQ = () => {
             }
             className={`${
               openFaq == FAQ_Questions.indexOf(item) ? " h-24" : " h-16"
-            }  cursor-pointer duration-300`}
+            } max-w-xl cursor-pointer duration-300`}
           >
             <div className="flex justify-between items-center gap-2">
               <h4>{item.label}</h4>
@@ -95,7 +95,7 @@ const FAQ = () => {
             </div>
             <AnimatePresence>
               {openFaq == FAQ_Questions.indexOf(item) && (
-                <motion.p {...fadeUp} className="text-start">
+                <motion.p {...fadeUp} className="text-start w-full">
                   {item.description}
                 </motion.p>
               )}
