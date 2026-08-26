@@ -5,12 +5,15 @@ import mongoose from "mongoose";
 
 export async function GET(
   req: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ error: "Invalid thought ID" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid thought ID" },
+        { status: 400 },
+      );
     }
 
     await connectDB();
@@ -38,6 +41,33 @@ export async function GET(
           as: "feedback",
         },
       },
+      {
+        $lookup: {
+          from: "user",
+          let: { userId: "$userId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: [{ $toString: "$_id" }, "$$userId"] },
+              },
+            },
+            {
+              $project: { name: 1 },
+            },
+          ],
+          as: "author",
+        },
+      },
+      {
+        $addFields: {
+          userName: { $arrayElemAt: ["$author.name", 0] },
+        },
+      },
+      {
+        $project: {
+          author: 0,
+        },
+      },
     ]);
 
     if (!thoughts || thoughts.length === 0) {
@@ -48,7 +78,7 @@ export async function GET(
   } catch (err) {
     return NextResponse.json(
       { error: "Internal Server Error", details: (err as Error).message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

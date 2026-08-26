@@ -3,6 +3,7 @@ import { RankKey } from "./Thoughts_Rank";
 export type Thought = {
   _id: string;
   userId: string;
+  userName: string;
   thought: string;
   createdAt: string;
   country: string;

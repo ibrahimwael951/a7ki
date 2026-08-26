@@ -17,7 +17,6 @@ import { useRive } from "@rive-app/react-canvas";
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { data: session, isPending: isSessionPending } = useSession();
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [thoughtData, setThoughtData] = useState<Thought | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -56,27 +55,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <main className="pt-20 pb-30 w-full px-4 min-h-[80vh] flex flex-row-reverse justify-center items-start gap-10">
-      <section className="relative overflow-hidden w-2/4 h-160 hidden xl:inline">
+      <section className="relative overflow-hidden w-2/4 h-120 hidden xl:inline">
         <div className="w-[560] h-[560] absolute top-2/4 left-2/4 -translate-2/4 ">
           <RiveComponent />
         </div>
       </section>
       <section className="xl:max-w-3xl! max-w-4xl! flex flex-col justify-start pt-5">
-        <T>
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
-              <span className="mark">Thought</span>
-            </h2>
-            <Button
-              onClick={() => router.back()}
-              variant="outline"
-              className="px-3 py-1 rounded-md border text-sm flex flex-row justify-center items-center gap-2 "
-            >
-              Go Back
-            </Button>
-          </div>
-        </T>
-
         <motion.div {...fadeUp} className="flex-1 flex flex-col justify-start">
           {loading && (
             <motion.div
@@ -117,6 +101,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 thoughtId={thoughtData._id}
                 ThoughtFeedback={thoughtData.feedback}
                 userId={thoughtData.userId}
+                userName={thoughtData.userName}
                 thought={thoughtData.thought}
                 rank={thoughtData.rank}
                 createdAt={thoughtData.createdAt}

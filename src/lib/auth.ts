@@ -19,6 +19,10 @@ export const auth = betterAuth({
   plugins: [
     nextCookies(),
     anonymous({
+      generateName: () => {
+        const id = crypto.randomUUID();
+        return `Anonymous-${id}`;
+      },
       generateRandomEmail: () => {
         const id = crypto.randomUUID();
         return `guest-${id}@A7KI.com`;

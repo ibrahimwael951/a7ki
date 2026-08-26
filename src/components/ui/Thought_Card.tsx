@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "./button";
 import { useRankConfig } from "@/data/rankConfig";
 import { useEffect, useState } from "react";
-import { BadgeX, CircleCheckBig, X, Trash2, Edit } from "lucide-react";
+import { BadgeX, CircleCheckBig, X, Trash2, Edit, User } from "lucide-react";
 import { useSession } from "@/lib/auth-client";
 import axios from "axios";
 import { ThoughtFeedback } from "@/types/Thoughts";
@@ -18,6 +18,7 @@ const Thought_Card = ({
   thoughtId,
   rank,
   userId,
+  userName,
   withUserBTN = false,
   createdAt,
   withoutSlice = false,
@@ -26,6 +27,7 @@ const Thought_Card = ({
   thought: string;
   thoughtId: string;
   userId?: string;
+  userName?: string;
   withUserBTN?: boolean;
   withoutSlice?: boolean;
   rank: RankKey;
@@ -233,9 +235,19 @@ const Thought_Card = ({
       >
         <div className="flex items-start gap-4 w-full">
           <div className="flex-1 min-w-0">
+            {/* Author row */}
+            {userName && (
+              <div className="flex items-end gap-1.5 mb-3 text-muted-foreground w-70 md:w-full">
+                <User size={24} className="mark" strokeWidth={3} />
+                <span className="text-foreground! text-sm font-medium truncate">
+                  {userName}
+                </span>
+              </div>
+            )}
+
             <p
               dir="auto"
-              className={`text-gray-700 text-lg leading-relaxed cursor-pointer whitespace-pre-wrap break-words ${
+              className={` text-foreground! text-lg leading-relaxed cursor-pointer whitespace-pre-wrap wrap-break-word ${
                 showFullMessage ? "" : "line-clamp-4"
               }`}
               onClick={() => setShowFullMessage(!showFullMessage)}
