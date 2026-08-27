@@ -20,7 +20,7 @@ export default function Page() {
 
   if (isPending || !session) return <Admin_Loading />;
   return (
-    <main className="pt-20 px-6">
+    <main className="pt-20 pb-15 px-6">
       <div className="mb-9">
         <T>
           <h2 className="text-2xl font-semibold ">

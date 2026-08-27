@@ -49,9 +49,17 @@ export default function Page() {
 
   const Messages = [
     t("Hi there !"),
+    t("My name is Emma!"),
+    t("I hope you are doing well today"),
     t("Here, you can share all your negative thoughts"),
+    t("Or you can share a joke and make people smile"),
     t("And don't worry, no one will know who you are."),
-    t("Lastly, please remember to be respectful to others and to our privacy"),
+    t("But please remember to be respectful to others and to our privacy"),
+    t(
+      "Don't type any sexual content or bully content or type personal information about you or anyone else",
+    ),
+    t("Because if u typed it you would get banned from the website"),
+    t("Okay that's all, Have Fun!!"),
   ];
 
   const { RiveComponent } = useRive({
@@ -228,12 +236,12 @@ export default function Page() {
 
   return (
     <LayoutGroup>
-      <main className="relative max-w-full! flex flex-col md:flex-row justify-center items-center pt-15 md:pt-0 p-4 pb-15 gap-8 overflow-hidden">
+      <main className="relative max-w-full! flex flex-col md:flex-row justify-center items-center pt-15 p-4 pb-20 md:pb-0 gap-8 overflow-hidden">
         {/* LEFT SIDE — everything that used to be the whole page */}
         <motion.div
           layout
           transition={{ duration: 0.35, ease: "easeInOut" }}
-          className="flex-1 w-full flex flex-col items-center"
+          className="flex-1 w-full flex flex-col justify-center items-center"
         >
           <motion.div
             variants={fadeUp}
@@ -259,7 +267,11 @@ export default function Page() {
                   className="w-full md:w-4/5 flex flex-col justify-center items-center gap-5 text-center"
                 >
                   <AnimatePresence mode="wait">
-                    <motion.div key={message} {...fadeOnly}>
+                    <motion.div
+                      key={message}
+                      {...fadeOnly}
+                      className="max-w-2xl"
+                    >
                       <TextType
                         text={Messages[message]}
                         onSentenceComplete={() => setButtonEnabled(true)}
@@ -271,7 +283,15 @@ export default function Page() {
 
                   <motion.div variants={fadeUp} transition={transition}>
                     <Button disabled={!buttonEnabled} onClick={btnHandler}>
-                      {message === 0 ? t("Hi!") : t("Okay, Got it")}
+                      {message === 0
+                        ? t("Hi!")
+                        : message === 1
+                          ? t("Hi Emma!")
+                          : message === Messages.length - 1
+                            ? t("Okay, Thank you!!")
+                            : message === Messages.length - 2
+                              ? t("Ofc, I won't type this")
+                              : t("Okay!")}
                     </Button>
                   </motion.div>
                 </motion.div>
@@ -371,7 +391,9 @@ export default function Page() {
                       >
                         <T>
                           <Var>
-                            <h4 className="whitespace-pre-wrap">{ai_Comment}</h4>
+                            <h4 className="whitespace-pre-wrap">
+                              {ai_Comment}
+                            </h4>
                           </Var>
 
                           <div className="flex flex-col justify-center items-center gap-4 mt-5">
@@ -423,7 +445,9 @@ export default function Page() {
                               >
                                 {deletingLoading
                                   ? t("Deleting......")
-                                  : t("Delete This Thought And Start Fresh")}{" "}
+                                  : t(
+                                      "Delete This Thought And Start Fresh",
+                                    )}{" "}
                               </Button>
                             </Var>
                           </div>
@@ -440,7 +464,7 @@ export default function Page() {
         {/* RIGHT SIDE — recent thoughts, desktop only.
             Fully animates out (width + opacity) then unmounts completely. */}
         <AnimatePresence>
-          {showRecentThoughtPanel && (
+          {showForm && showRecentThoughtPanel && (
             <motion.section
               key="recent-thoughts"
               layout
