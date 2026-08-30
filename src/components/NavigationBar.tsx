@@ -31,14 +31,14 @@ const NavigationBar = () => {
 
   const DesktopLinks = [
     { href: "/", icon: Home, label: t("Home") },
-    { href: "/moments", icon: PanelsTopLeft, label: t("Moments") },
-    { href: "/contact", icon: Mail, label: t("Contact") },
+    { href: "/thought", icon: PanelsTopLeft, label: t("People Thoughts") },
+    { href: "/contact", icon: Mail, label: t("Contact Us") },
     { href: "/FAQs", icon: MessageCircleQuestionMark, label: t("FAQs") },
   ];
   const MobileLinks = [
     { href: "/", icon: Home, label: "Home" },
     { href: "/contact", icon: Mail, label: "Contact" },
-    { href: "/moments", icon: PanelsTopLeft, label: "Moments" },
+    { href: "/thought", icon: PanelsTopLeft, label: "People Thoughts" },
     { href: "/Saved", icon: Bookmark, label: "Saved" },
     {
       href: isAdmin ? "/Admin/dashboard" : "/dashboard",

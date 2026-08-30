@@ -3,12 +3,13 @@ import { RankKey } from "./Thoughts_Rank";
 export type Thought = {
   _id: string;
   userId: string;
-  userName: string;
+  userName?: string;
   thought: string;
-  createdAt: string;
   country: string;
   rank: RankKey;
-  feedback: ThoughtFeedback[];
+  views?: number;
+  createdAt: string;
+  feedback?: ThoughtFeedback[];
 };
 
 export type ThoughtFeedback = {

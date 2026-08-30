@@ -1,12 +1,10 @@
 "use client";
 import { fadeOnly, fadeUp } from "@/Animation";
-import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import { use, useEffect, useState } from "react";
 import { Bug } from "lucide-react";
 import Admin_Loading from "@/components/ui/Admin_Loading";
-import { useRouter } from "next/navigation";
 import { Thought } from "@/types/Thoughts";
 import Thought_Card from "@/components/ui/Thought_Card";
 import Comment_Section from "@/components/ui/Comment_Section";

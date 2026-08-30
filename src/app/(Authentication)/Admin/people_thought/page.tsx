@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import Admin_Loading from "@/components/ui/Admin_Loading";
 import { fadeLeft, fadeOnly, fadeUp } from "@/Animation";
 import { Thought } from "@/types/Thoughts";
-import Thought_Card from "@/components/ui/Thought_Card";
 import { useAdmin } from "../../../../providers/AdminContext";
 import { useRouter } from "next/navigation";
 import { useIsTablet } from "@/hooks/IsMobile";
 import { T } from "gt-next";
+import Link from "next/link";
 export default function Page() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -26,7 +26,7 @@ export default function Page() {
     setLoading(true);
     try {
       const result = await axios.get(
-        `/api/Admin/people_thoughts?page=${pageNumber}`
+        `/api/Admin/people_thoughts?page=${pageNumber}`,
       );
 
       if (pageNumber === 1) {
@@ -88,16 +88,18 @@ export default function Page() {
         {data.length >= 1 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {data.map((item) => (
-              <Thought_Card
+              <Link
                 key={item._id}
-                thoughtId={item._id}
-                userId={item.userId}
-                thought={item.thought}
-                rank={item.rank}
-                createdAt={item.createdAt}
-                ThoughtFeedback={item.feedback}
-                withUserBTN
-              />
+                href={`/thought/${item._id}`}
+                className="block rounded-xl border-2 border-neutral-300/50 dark:border-neutral-700/50 p-4 bg-neutral-200/40 dark:bg-neutral-800/40 hover:bg-neutral-200/70 dark:hover:bg-neutral-800/70 transition-colors"
+              >
+                <p dir="auto" className="text-accent! dark:text-accent-foreground! text-sm line-clamp-5">{item.thought}</p>
+                <div className="flex items-center justify-end gap-2 mt-2">
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(item.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+              </Link>
             ))}
           </div>
         ) : (

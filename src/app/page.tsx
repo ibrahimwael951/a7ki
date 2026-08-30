@@ -38,7 +38,7 @@ export default function Page() {
   const [ai_Comment, setAi_Comment] = useState("");
   const [wantEdit, setWantEdit] = useState("");
   const [thought_id, setThought_id] = useState("");
-  const { data: session, isPending } = useSession();
+  const { data: session } = useSession();
   const Examples = useExamples();
 
   // Recent thoughts panel (desktop only)
@@ -48,18 +48,33 @@ export default function Page() {
   const showExamples = searchParams.get("examples") === "true";
 
   const Messages = [
-    t("Hi there !"),
+    t("Hi there!"),
+
     t("My name is Emma!"),
-    t("I hope you are doing well today"),
-    t("Here, you can share all your negative thoughts"),
-    t("Or you can share a joke and make people smile"),
+
+    t("Here at A7ki, you can share all your thoughts."),
+
+    t("Negative or positive, they're all welcome here."),
+
+    t("Or you can share a joke and make people laugh!"),
+
+    t("We don't collect any personal information from you or anyone else."),
+
     t("And don't worry, no one will know who you are."),
-    t("But please remember to be respectful to others and to our privacy"),
+
+    t("Okay! Now, I want you to be respectful toward others."),
+
     t(
-      "Don't type any sexual content or bully content or type personal information about you or anyone else",
+      "Don't post sexual content, bullying or harassment, or personal information about yourself or anyone else.",
     ),
-    t("Because if u typed it you would get banned from the website"),
-    t("Okay that's all, Have Fun!!"),
+
+    t("If you post any of this content, you may be banned from the website."),
+
+    t(
+      "Don't clear the website's cache, because doing so may prevent you from accessing your profile.",
+    ),
+
+    t("Okay, that's all! Have fun!!"),
   ];
 
   const { RiveComponent } = useRive({
@@ -289,7 +304,7 @@ export default function Page() {
                           ? t("Hi Emma!")
                           : message === Messages.length - 1
                             ? t("Okay, Thank you!!")
-                            : message === Messages.length - 2
+                            : message === Messages.length - 3
                               ? t("Ofc, I won't type this")
                               : t("Okay!")}
                     </Button>
@@ -400,9 +415,9 @@ export default function Page() {
                             <Button
                               className="w-full"
                               size={"lg"}
-                              link={"/moments"}
+                              link={"/thought"}
                             >
-                              See People Moments!
+                              See People Thoughts!
                             </Button>
                             <Button
                               className="w-full"
