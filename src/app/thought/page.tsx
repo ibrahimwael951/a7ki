@@ -47,7 +47,7 @@ export default function Page() {
   }, [hasMore, loadingMore, thoughts.length]);
 
   return (
-    <main className="relative flex flex-col justify-center items-center gap-5 overflow-hidden pt-20 md:pt-25 pb-20 px-4">
+    <main className="relative flex flex-col justify-center items-center gap-5 overflow-hidden pt-20 md:pt-25 pb-20">
       <section className="flex flex-row-reverse justify-center items-start gap-5">
         <div className="hidden md:inline relative w-full h-60 -z-20 mt-10">
           <RiveComponent className="absolute top-2/4 left-2/4 -translate-2/4 object-cover w-[700px] h-[700px] max-w-5xl min-h-96" />
@@ -77,7 +77,7 @@ export default function Page() {
             </T>
           ) : (
             <>
-              <motion.div {...fadeUp} className="grid grid-cols-1 gap-4">
+              <motion.div {...fadeOnly} className="grid grid-cols-1 gap-4">
                 {thoughts.map((thought) => (
                   <Moment_Card key={thought._id} thought={thought} />
                 ))}

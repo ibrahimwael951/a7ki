@@ -12,6 +12,7 @@ import Thought_Card from "@/components/ui/Thought_Card";
 import axios from "axios";
 import { T, useGT } from "gt-next";
 import Link from "next/link";
+import Moment_Card from "@/components/ui/Moment_Card";
 
 export default function Page() {
   const { data: session, isPending } = useSession();
@@ -123,18 +124,7 @@ export default function Page() {
               </motion.div>
             )}
             {data.map((item) => (
-              <Link
-                key={item._id}
-                href={`/thought/${item._id}`}
-                className="block rounded-xl border-2 border-neutral-300/50 dark:border-neutral-700/50 p-4 bg-neutral-200/40 dark:bg-neutral-800/40 hover:bg-neutral-200/70 dark:hover:bg-neutral-800/70 transition-colors"
-              >
-                <p className="text-sm line-clamp-5">{item.thought}</p>
-                <div className="flex items-center justify-end gap-2 mt-2">
-                  <span className="text-xs text-muted-foreground">
-                    {new Date(item.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </Link>
+              <Moment_Card key={item._id} thought={item} />
             ))}
           </div>
         )}

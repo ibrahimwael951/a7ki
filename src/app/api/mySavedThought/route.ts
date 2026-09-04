@@ -26,10 +26,7 @@ export async function GET(req: Request) {
     );
 
     if (!savedThoughtIds || savedThoughtIds.length === 0) {
-      return NextResponse.json(
-        { message: "No saved thoughts found" },
-        { status: 200 },
-      );
+      return NextResponse.json({ thoughts: [] }, { status: 200 });
     }
 
     const thoughts = await mongoose.model("Thought").find({
@@ -40,6 +37,7 @@ export async function GET(req: Request) {
       _id: item._id,
       thought: item.thought,
       createdAt: item.createdAt,
+      views: item.views,
     }));
 
     return NextResponse.json({ thoughts: result }, { status: 200 });

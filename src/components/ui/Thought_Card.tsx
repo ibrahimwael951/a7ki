@@ -30,7 +30,7 @@ const Thought_Card = ({
   thoughtId: string;
   userId?: string;
   userName?: string;
-  saved: boolean;
+  saved?: boolean;
   withUserBTN?: boolean;
   withoutSlice?: boolean;
   rank: RankKey;

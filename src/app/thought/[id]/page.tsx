@@ -52,7 +52,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   if (isSessionPending) return <Admin_Loading />;
 
   return (
-    <main className="pt-20 pb-30 w-full px-4 min-h-[80vh] flex flex-row-reverse justify-center items-start gap-10">
+    <main className="pt-20 pb-30 w-full min-h-[80vh] flex flex-row-reverse justify-center items-start gap-10">
       <section className="relative overflow-hidden w-2/4 h-120 hidden xl:inline">
         <div className="w-[560] h-[560] absolute top-2/4 left-2/4 -translate-2/4 ">
           <RiveComponent />
