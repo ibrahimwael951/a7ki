@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongoDB";
 import { Thought } from "@/models/Thought";
 import { ThoughtView } from "@/models/ThoughtView";
+import { SavedThought } from "@/models/SavedThought";
 import { getUserNameMap } from "@/lib/attachUserNames";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -71,8 +72,17 @@ export async function GET(
     thought.userName = userNameMap.get(thought.userId);
 
     const session = await auth.api.getSession({ headers: await headers() });
+
+    thought.saved = false;
+
     if (session?.user?.id) {
       await trackView(thoughtObjectId, session.user.id);
+
+      const savedRecord = await SavedThought.exists({
+        userId: session.user.id,
+        thoughtId: thoughtObjectId,
+      });
+      thought.saved = !!savedRecord;
     }
 
     return NextResponse.json(thought, { status: 200 });

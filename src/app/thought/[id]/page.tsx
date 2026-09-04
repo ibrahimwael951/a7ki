@@ -97,6 +97,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             <div className="w-full h-full flex flex-col justify-baseline">
               <Thought_Card
                 thoughtId={thoughtData._id}
+                saved={thoughtData.saved}
                 ThoughtFeedback={thoughtData.feedback}
                 userId={thoughtData.userId}
                 userName={thoughtData.userName}

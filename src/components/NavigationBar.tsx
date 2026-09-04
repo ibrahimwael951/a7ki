@@ -32,14 +32,14 @@ const NavigationBar = () => {
   const DesktopLinks = [
     { href: "/", icon: Home, label: t("Home") },
     { href: "/thought", icon: PanelsTopLeft, label: t("People Thoughts") },
-    { href: "/contact", icon: Mail, label: t("Contact Us") },
+    { href: "/savedThought", icon: Mail, label: t("Saved") },
     { href: "/FAQs", icon: MessageCircleQuestionMark, label: t("FAQs") },
   ];
   const MobileLinks = [
     { href: "/", icon: Home, label: "Home" },
     { href: "/contact", icon: Mail, label: "Contact" },
     { href: "/thought", icon: PanelsTopLeft, label: "People Thoughts" },
-    { href: "/Saved", icon: Bookmark, label: "Saved" },
+    { href: "/savedThought", icon: Bookmark, label: "Saved" },
     {
       href: isAdmin ? "/Admin/dashboard" : "/dashboard",
       icon: User,

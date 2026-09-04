@@ -8,6 +8,7 @@ export type Thought = {
   country: string;
   rank: RankKey;
   views?: number;
+  saved: boolean;
   createdAt: string;
   feedback?: ThoughtFeedback[];
 };

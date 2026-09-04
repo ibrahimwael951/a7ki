@@ -12,9 +12,11 @@ import { T, useGT, useLocale } from "gt-next";
 import { RankKey } from "@/types/Thoughts_Rank";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import SaveBtn from "./SaveBtn";
 
 const Thought_Card = ({
   thought,
+  saved,
   thoughtId,
   rank,
   userId,
@@ -28,6 +30,7 @@ const Thought_Card = ({
   thoughtId: string;
   userId?: string;
   userName?: string;
+  saved: boolean;
   withUserBTN?: boolean;
   withoutSlice?: boolean;
   rank: RankKey;
@@ -236,15 +239,16 @@ const Thought_Card = ({
         <div className="flex items-start gap-4 w-full">
           <div className="flex-1 min-w-0">
             {/* Author row */}
-            {userName && (
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-end gap-1.5 mb-3 text-muted-foreground w-70 md:w-full">
                 <User size={24} className="mark" strokeWidth={3} />
                 <span className="text-foreground! text-sm font-medium truncate">
                   {userName}
                 </span>
               </div>
-            )}
 
+              <SaveBtn Saved={saved} thoughtId={thoughtId} />
+            </div>
             <p
               dir="auto"
               className={` text-foreground! text-lg leading-relaxed cursor-pointer whitespace-pre-wrap wrap-break-word ${

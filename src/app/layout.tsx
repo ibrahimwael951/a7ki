@@ -63,18 +63,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-          <NextTopLoader
-            color="#b97375"
-            height={3}
-            showSpinner={false}
-          />
+        <NextTopLoader color="#b97375" height={3} showSpinner={false} />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <GTProvider>
             <AdminProvider>
               <Welcome />
               <NavigationBar />
               {children}
-               <Toaster richColors closeButton />
+              <Toaster richColors closeButton />
             </AdminProvider>
           </GTProvider>
         </ThemeProvider>
